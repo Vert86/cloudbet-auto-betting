@@ -1,273 +1,287 @@
-# Pinnacle Automated Sports Betting System
+# Cloudbet Automated Sports Betting System
 
-An intelligent automated betting system that analyzes odds from multiple sources, identifies value betting opportunities, and executes bets automatically on your Pinnacle account.
+An intelligent automated betting system that analyzes odds from multiple sources, identifies value betting opportunities, and executes bets automatically on your **Cloudbet** account using cryptocurrency.
+
+## Why Cloudbet?
+
+- ✅ **Public API Access**: Available to all users (just deposit 10 EUR equivalent)
+- ✅ **Cryptocurrency Support**: BTC, ETH, USDT, and many more
+- ✅ **International**: Available globally
+- ✅ **Instant Withdrawals**: Fast crypto payouts
+- ✅ **Well Documented**: Complete REST API with Swagger docs
 
 ## Features
 
-- **Multi-Source Odds Aggregation**: Collects and compares odds from Pinnacle and external sources
+- **Multi-Source Odds Aggregation**: Collects and compares odds from Cloudbet and external sources
 - **Smart Bet Selection**: Uses statistical analysis to identify value bets with positive expected value
 - **Kelly Criterion Betting**: Automatically calculates optimal bet sizes based on bankroll and edge
 - **Risk Management**: Built-in limits for daily losses, maximum exposure, and bet frequency
 - **Performance Tracking**: Monitors win/loss rates and adjusts bet sizing based on recent performance
 - **Automatic Execution**: Places bets automatically when opportunities meet your criteria
+- **Cryptocurrency Native**: All bets in Bitcoin or your preferred crypto
 - **Comprehensive Logging**: Detailed logs of all activities, bets, and performance metrics
 
-## System Architecture
+## Quick Start
 
-```
-src/
-├── config/
-│   └── config.js              # Configuration management
-├── services/
-│   ├── pinnacleAPI.js         # Pinnacle API integration
-│   ├── oddsAggregator.js      # Multi-source odds collection
-│   ├── bettingStrategy.js     # Decision engine and risk management
-│   └── betExecutor.js         # Bet placement and tracking
-├── utils/
-│   └── logger.js              # Logging system
-└── index.js                   # Main application entry point
-```
+### 1. Create Cloudbet Account
 
-## Prerequisites
+1. Sign up at [Cloudbet.com](https://www.cloudbet.com/)
+2. Deposit minimum **10 EUR equivalent** in cryptocurrency (e.g., 0.001 BTC)
+3. Go to [Account → API](https://www.cloudbet.com/en/account/api)
+4. Generate your **Trading API Key** (not Affiliate key!)
 
-- Node.js v14 or higher
-- Active Pinnacle account with API access
-- Funded Pinnacle account
+### 2. Install & Configure
 
-**IMPORTANT**: As of July 23, 2025, Pinnacle API access is restricted. You must contact api@pinnacle.com to request access for your account.
-
-## Installation
-
-1. Install dependencies:
 ```bash
+# Install dependencies
 npm install
-```
 
-2. Configure your credentials:
-```bash
+# Copy environment template
 cp .env.example .env
+
+# Edit .env and add your Cloudbet API key
+nano .env  # or use any text editor
 ```
 
-3. Edit `.env` file with your credentials and preferences:
+Your `.env` file should look like:
 ```env
-# Required: Pinnacle API Credentials
-PINNACLE_USERNAME=your_pinnacle_username
-PINNACLE_PASSWORD=your_pinnacle_password
+BETTING_PLATFORM=cloudbet
+CLOUDBET_API_KEY=your_actual_api_key_here
+CLOUDBET_CURRENCY=BTC
 
-# Optional: Odds comparison API key (get from https://the-odds-api.com)
-ODDS_API_KEY=your_odds_api_key
-
-# Betting Configuration
-MIN_ODDS=1.50                    # Minimum acceptable odds
-MAX_ODDS=5.00                    # Maximum acceptable odds
-MIN_BET_AMOUNT=10                # Minimum bet size
-MAX_BET_AMOUNT=100               # Maximum bet size
-MAX_DAILY_LOSS=500               # Maximum daily loss limit
-MAX_TOTAL_EXPOSURE=1000          # Maximum total at-risk amount
-
-# Risk Management
-KELLY_FRACTION=0.25              # Kelly fraction (0.25 = quarter Kelly)
-MIN_EDGE_PERCENTAGE=2.0          # Minimum edge required to place bet
-MAX_BETS_PER_DAY=10              # Maximum bets per day
-BANKROLL_PERCENTAGE_PER_BET=2    # Max % of bankroll per bet
+MIN_BET_AMOUNT=0.001
+MAX_BET_AMOUNT=0.01
+MAX_DAILY_LOSS=0.05
+...
 ```
 
-## Usage
+### 3. Test Connection
 
-### Start the Automated System
+```bash
+npm test
+```
+
+If all tests pass ✅, you're ready to go!
+
+### 4. Start the System
 
 ```bash
 npm start
 ```
 
-The system will:
-1. Connect to your Pinnacle account and verify credentials
-2. Check your account balance
-3. Begin monitoring odds and identifying opportunities
-4. Automatically place bets when value opportunities are found
-5. Monitor active bets and update performance metrics
-6. Run continuously with scheduled cycles every 15 minutes
-
-### Development Mode (with auto-restart)
-
-```bash
-npm run dev
-```
-
 ## How It Works
 
-### 1. Odds Collection
-- Every 15 minutes, the system fetches odds from Pinnacle for major sports
-- Optionally compares with external bookmaker odds for value detection
-- Respects Pinnacle's rate limits (1 request per 2 minutes per endpoint)
+### 1. Odds Collection (Every 10 minutes)
+- Fetches odds from Cloudbet for major sports (soccer, basketball, tennis, etc.)
+- Compares with external bookmaker odds (if configured)
+- Identifies discrepancies and value opportunities
 
 ### 2. Value Detection
-- Compares Pinnacle odds with market averages
-- Calculates implied probabilities and edge percentages
-- Identifies bets with positive expected value
+- Calculates implied probabilities
+- Compares Cloudbet odds with market averages
+- Identifies bets with positive expected value (edge ≥ 2%)
 
 ### 3. Bet Evaluation
 - Verifies odds are still available
 - Calculates optimal bet size using Kelly Criterion
-- Adjusts sizing based on recent performance
-- Checks all risk management constraints:
-  - Daily bet limit
-  - Daily loss limit
-  - Total exposure limit
-  - Odds range
-  - Minimum edge requirement
+- Adjusts sizing based on recent performance (reduces during losing streaks)
+- Checks all risk management constraints
 
 ### 4. Bet Execution
-- Places bets automatically via Pinnacle API
+- Places bets automatically via Cloudbet Trading API
 - Tracks all bets in real-time
 - Monitors bet outcomes
 - Updates performance statistics
 
 ### 5. Performance Adjustment
 - Monitors win/loss rate over last 10 bets
-- Reduces bet sizes during losing streaks (3+ losses)
-- Slightly increases during winning streaks
+- Reduces bet sizes by 30% during losing streaks (3+ losses)
+- Slightly increases (10%) during winning periods
 - Resets daily statistics at midnight
 
-## Risk Management
+## Configuration
 
-The system includes multiple layers of protection:
+### Cryptocurrency Settings
 
-1. **Bet Sizing**: Uses fractional Kelly Criterion to prevent over-betting
-2. **Daily Limits**: Stops betting after reaching max daily loss or bet count
-3. **Exposure Control**: Limits total amount at risk across all active bets
-4. **Odds Verification**: Confirms odds before placing each bet
-5. **Performance-Based Adjustment**: Reduces bet sizes during losing periods
+The system defaults to Bitcoin (BTC), but you can use any currency supported by Cloudbet:
 
-## Logging and Monitoring
-
-Logs are stored in the `logs/` directory:
-- `combined.log`: All system activity
-- `error.log`: Errors only
-- `bets.log`: All bet placements and outcomes
-
-Bet history is stored in `data/bets_history.json`
-
-## Statistics and Reports
-
-The system tracks:
-- Overall win rate and ROI
-- Daily profit/loss
-- Current winning/losing streaks
-- Total bets placed
-- Total amount staked and returned
-
-Daily reports are automatically generated at midnight.
-
-## Configuration Guide
-
-### Conservative Settings (Recommended for beginners)
 ```env
-KELLY_FRACTION=0.10              # Very conservative bet sizing
-MIN_EDGE_PERCENTAGE=3.0          # Higher edge requirement
-MAX_BETS_PER_DAY=5               # Fewer bets
-BANKROLL_PERCENTAGE_PER_BET=1    # Lower max per bet
+CLOUDBET_CURRENCY=BTC   # or ETH, USDT, LTC, etc.
 ```
 
-### Moderate Settings (Default)
+### Bet Size Configuration
+
+Amounts are in cryptocurrency units:
+
 ```env
-KELLY_FRACTION=0.25
-MIN_EDGE_PERCENTAGE=2.0
-MAX_BETS_PER_DAY=10
-BANKROLL_PERCENTAGE_PER_BET=2
+# Conservative (recommended for beginners)
+MIN_BET_AMOUNT=0.0001      # ~$7 at $70k BTC
+MAX_BET_AMOUNT=0.001       # ~$70
+MAX_DAILY_LOSS=0.005       # ~$350
+MAX_TOTAL_EXPOSURE=0.01    # ~$700
+
+# Moderate
+MIN_BET_AMOUNT=0.001       # ~$70
+MAX_BET_AMOUNT=0.01        # ~$700
+MAX_DAILY_LOSS=0.05        # ~$3,500
+MAX_TOTAL_EXPOSURE=0.1     # ~$7,000
+
+# Aggressive (higher risk)
+MIN_BET_AMOUNT=0.01        # ~$700
+MAX_BET_AMOUNT=0.1         # ~$7,000
+MAX_DAILY_LOSS=0.5         # ~$35,000
+MAX_TOTAL_EXPOSURE=1.0     # ~$70,000
 ```
 
-### Aggressive Settings (Higher risk/reward)
+### Risk Management
+
 ```env
-KELLY_FRACTION=0.50
-MIN_EDGE_PERCENTAGE=1.5
-MAX_BETS_PER_DAY=20
-BANKROLL_PERCENTAGE_PER_BET=3
+KELLY_FRACTION=0.25              # Use 1/4 Kelly (conservative)
+MIN_EDGE_PERCENTAGE=2.0          # Minimum 2% edge required
+MAX_BETS_PER_DAY=10              # Max 10 bets per day
+BANKROLL_PERCENTAGE_PER_BET=2    # Max 2% of bankroll per bet
 ```
+
+## API Endpoints Used
+
+### Feed API
+- `GET /v2/sports` - Get available sports
+- `GET /v2/sports/{sport}/events` - Get events with odds
+- `GET /v2/events/{eventId}` - Get specific event odds
+
+### Trading API
+- `POST /v3/bets` - Place a bet
+- `GET /v3/bets` - Get bet history
+- `GET /v3/bets/{betId}` - Get specific bet details
+
+### Account API
+- `GET /v1/account/balances` - Get account balances
 
 ## Supported Sports
 
 The system focuses on major sports with high liquidity:
-- Soccer (Football)
-- Basketball
-- Tennis
-- Baseball
-- American Football
+- ⚽ Soccer (Football)
+- 🏀 Basketball
+- 🎾 Tennis
+- 🏈 American Football
+- ⚾ Baseball
 
-## API Rate Limits
+## Risk Management Features
 
-Pinnacle enforces strict rate limits:
-- **Odds endpoints**: 1 request per 2 minutes per sport
-- **Sports list**: Maximum once per hour
-- **Maximum IPs**: 2 per account
+1. **Kelly Criterion**: Optimal bet sizing based on edge and bankroll
+2. **Fractional Kelly**: Uses 25% of full Kelly for safety
+3. **Daily Loss Limit**: Stops betting after reaching daily loss threshold
+4. **Maximum Exposure**: Limits total amount at risk across all active bets
+5. **Bet Count Limit**: Maximum number of bets per day
+6. **Performance-Based Adjustment**: Reduces bets during losing streaks
+7. **Odds Range**: Only bets within acceptable odds range (1.50 - 5.00)
 
-The system automatically handles rate limiting with delays between requests.
+## Logging and Monitoring
+
+### Logs Directory
+- `logs/combined.log` - All system activity
+- `logs/error.log` - Errors only
+- `logs/bets.log` - All bet placements and outcomes
+
+### Data Files
+- `data/cloudbet_bets_history.json` - Complete bet history
+
+### Statistics Tracked
+- Overall win rate and ROI
+- Daily profit/loss (in BTC/crypto)
+- Current winning/losing streaks
+- Total bets placed
+- Total amount staked and returned
 
 ## Troubleshooting
 
-### "Pinnacle credentials not configured"
-- Make sure you've copied `.env.example` to `.env`
-- Fill in your Pinnacle username and password
+### "API key not configured"
+- Make sure you've created `.env` file (copy from `.env.example`)
+- Add your actual Cloudbet API key
+
+### "Authentication failed"
+**Possible causes:**
+1. Invalid API key → Check you copied it correctly
+2. Using Affiliate key → Must use Trading API key
+3. Insufficient deposit → Need minimum 10 EUR equivalent
 
 ### "Insufficient bankroll"
-- Ensure your Pinnacle account is funded
-- Minimum balance should be at least MIN_BET_AMOUNT
-
-### "TOO_MANY_REQUESTS" error
-- The system hit Pinnacle's rate limit
-- It will automatically wait and retry
-- Consider increasing delays in code if this persists
-
-### "API access denied"
-- You may not have API access enabled
-- Contact api@pinnacle.com to request access
+- Ensure your Cloudbet account has enough funds
+- Minimum balance should be at least `MIN_BET_AMOUNT`
+- Check you're using the correct currency (BTC, ETH, etc.)
 
 ### No bets being placed
-- Check MIN_EDGE_PERCENTAGE - you may need to lower it
-- Verify MIN_ODDS and MAX_ODDS aren't too restrictive
-- Check logs for why opportunities are being rejected
+**Check these settings:**
+- `MIN_EDGE_PERCENTAGE` might be too high (try 1.5%)
+- `MIN_ODDS` / `MAX_ODDS` might be too restrictive
+- Check logs to see why opportunities are rejected
+- External odds API might not be configured (optional but helpful)
 
-## Safety Notes
+### Connection test fails
+```bash
+npm test
+```
+Will diagnose the exact issue and provide solutions.
 
-1. **Start with small amounts**: Test with minimum bet sizes first
-2. **Monitor closely**: Watch the system for the first few days
-3. **Set conservative limits**: Use the conservative settings initially
-4. **Regular balance checks**: Verify your account balance matches expectations
-5. **Backup bankroll**: Only bet what you can afford to lose
+## External Odds Comparison (Optional)
+
+For better value detection, you can add an external odds API:
+
+1. Sign up at [The Odds API](https://the-odds-api.com/)
+2. Get free API key (500 requests/month free)
+3. Add to `.env`:
+```env
+ODDS_API_KEY=your_odds_api_key_here
+```
+
+This allows the system to compare Cloudbet odds with market averages.
 
 ## Advanced Customization
 
-### Adding New Sports
-Edit `src/index.js` and add to `targetSports` array:
+### Change Update Frequency
+
+Edit `src/index-cloudbet.js`:
+
 ```javascript
-this.targetSports = ['soccer', 'basketball', 'tennis', 'hockey', 'mma'];
+// Current: every 10 minutes
+cron.schedule('*/10 * * * *', async () => { ... });
+
+// Change to every 5 minutes
+cron.schedule('*/5 * * * *', async () => { ... });
 ```
 
-### Changing Bet Cycle Frequency
-Edit the cron schedule in `src/index.js`:
-```javascript
-// Current: every 15 minutes
-cron.schedule('*/15 * * * *', async () => { ... });
+### Add More Sports
 
-// Example: every 30 minutes
-cron.schedule('*/30 * * * *', async () => { ... });
+Edit `src/index-cloudbet.js` and update `targetSports`:
+
+```javascript
+this.targetSports = ['soccer', 'basketball', 'tennis', 'ice-hockey', 'mma'];
 ```
 
-### Custom Betting Strategy
-Modify `src/services/bettingStrategy.js` to implement your own strategy logic.
+### Custom Strategy
 
-## Data Storage
+Modify `src/services/bettingStrategy.js` to implement your own betting logic.
 
-- **Bet History**: `data/bets_history.json` - All historical bet records
-- **Logs**: `logs/` directory - All system logs with rotation
-- **Performance**: In-memory tracking, logged to files
+## Safety Best Practices
 
-## Stopping the System
+1. **Start Small**: Begin with minimum bet amounts
+2. **Test First**: Run `npm test` before starting
+3. **Monitor Closely**: Watch for the first 24 hours
+4. **Conservative Limits**: Use conservative risk settings initially
+5. **Regular Checks**: Verify balances match your expectations
+6. **Separate Bankroll**: Only use funds you can afford to lose
 
-Press `Ctrl+C` to gracefully shut down the system. It will:
-1. Log final statistics
-2. Save all data
-3. Exit cleanly
+## Comparison: Cloudbet vs Pinnacle
+
+| Feature | Cloudbet | Pinnacle |
+|---------|----------|----------|
+| API Access | ✅ Public (10 EUR deposit) | ❌ Restricted (by request) |
+| Cryptocurrency | ✅ BTC, ETH, USDT, etc. | ❌ Fiat only |
+| International | ✅ Global | ⚠️ Limited regions |
+| Withdrawals | ✅ Instant (crypto) | ⏳ 1-3 days |
+| API Documentation | ✅ Excellent (Swagger) | ✅ Good |
+| Liquidity | ⚠️ Good | ✅ Excellent |
+| Margins | ⚠️ Moderate | ✅ Low (sharp) |
 
 ## License
 
@@ -275,16 +289,31 @@ This software is provided as-is for personal use. Use at your own risk.
 
 ## Disclaimer
 
-**IMPORTANT**: Automated betting carries financial risk. This system does not guarantee profits. Past performance does not indicate future results. Only bet what you can afford to lose. Ensure compliance with local gambling laws and Pinnacle's terms of service.
+**IMPORTANT**: Automated betting carries financial risk. This system does not guarantee profits. Past performance does not indicate future results. Only bet what you can afford to lose. Ensure compliance with local gambling laws and Cloudbet's terms of service. Cryptocurrency values fluctuate - manage your risk accordingly.
 
 ## Support
 
-For issues or questions:
-1. Check the logs in `logs/` directory
-2. Review the troubleshooting section
-3. Verify your configuration in `.env`
-4. Check Pinnacle API status
+For issues:
+1. Run `npm test` to diagnose connection issues
+2. Check logs in `logs/` directory
+3. Review troubleshooting section above
+4. Verify Cloudbet API status
+5. Check your account has sufficient balance
 
 ## Version
 
-1.0.0 - Initial Release
+2.0.0 - Cloudbet Integration Release
+
+---
+
+**Ready to start?**
+
+```bash
+npm install
+cp .env.example .env
+# Edit .env with your Cloudbet API key
+npm test
+npm start
+```
+
+🚀 Happy automated betting with cryptocurrency!

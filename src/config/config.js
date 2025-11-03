@@ -20,10 +20,10 @@ module.exports = {
   betting: {
     minOdds: parseFloat(process.env.MIN_ODDS) || 1.50,
     maxOdds: parseFloat(process.env.MAX_ODDS) || 5.00,
-    minBetAmount: parseFloat(process.env.MIN_BET_AMOUNT) || 0.001, // For crypto (e.g., 0.001 BTC)
-    maxBetAmount: parseFloat(process.env.MAX_BET_AMOUNT) || 0.01,
-    maxDailyLoss: parseFloat(process.env.MAX_DAILY_LOSS) || 0.05,
-    maxTotalExposure: parseFloat(process.env.MAX_TOTAL_EXPOSURE) || 0.1,
+    minBetAmount: parseFloat(process.env.MIN_BET_AMOUNT) || 1, // Default for USDT/stablecoins
+    maxBetAmount: parseFloat(process.env.MAX_BET_AMOUNT) || 10,
+    maxDailyLoss: parseFloat(process.env.MAX_DAILY_LOSS) || 50,
+    maxTotalExposure: parseFloat(process.env.MAX_TOTAL_EXPOSURE) || 100,
   },
 
   riskManagement: {

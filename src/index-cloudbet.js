@@ -31,7 +31,8 @@ class CloudbetAutoBettingSystem {
       // Get account balance for selected currency
       const balanceData = await cloudbetAPI.getBalance(this.currency);
 
-      this.bankroll = balanceData.available || 0;
+      // Balance can be in .available or .amount format
+      this.bankroll = parseFloat(balanceData.available || balanceData.amount || 0);
 
       logger.info('Account balance retrieved', {
         balance: this.bankroll,
@@ -291,7 +292,7 @@ class CloudbetAutoBettingSystem {
   async updateBankroll() {
     try {
       const balanceData = await cloudbetAPI.getBalance(this.currency);
-      this.bankroll = balanceData.available || 0;
+      this.bankroll = parseFloat(balanceData.available || balanceData.amount || 0);
 
       logger.info('Bankroll updated', {
         balance: this.bankroll,
