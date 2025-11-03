@@ -34,19 +34,19 @@ const testEndpoints = [
   {
     name: 'Sports List',
     method: 'GET',
-    url: 'https://sports-api.cloudbet.com/pub/v2/sports',
+    url: 'https://sports-api.cloudbet.com/pub/v2/odds/sports',
     description: 'Get available sports'
   },
   {
     name: 'Account Balance',
     method: 'GET',
-    url: 'https://sports-api.cloudbet.com/pub/v1/account/balances',
+    url: 'https://sports-api.cloudbet.com/pub/v2/account/balances',
     description: 'Verify account access and check balance'
   },
   {
     name: 'Soccer Events',
     method: 'GET',
-    url: 'https://sports-api.cloudbet.com/pub/v2/sports/soccer/events',
+    url: 'https://sports-api.cloudbet.com/pub/v2/odds/sports/soccer',
     description: 'Fetch soccer events with odds'
   }
 ];

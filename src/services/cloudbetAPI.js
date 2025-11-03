@@ -4,15 +4,12 @@ const logger = require('../utils/logger');
 
 class CloudbetAPI {
   constructor() {
-    this.feedBaseUrl = 'https://sports-api.cloudbet.com/pub/v2';
-    this.tradingBaseUrl = 'https://sports-api.cloudbet.com/pub/v3';
-    this.accountBaseUrl = 'https://sports-api.cloudbet.com/pub/v1';
-
+    this.baseUrl = 'https://sports-api.cloudbet.com/pub';
     this.apiKey = config.cloudbet.apiKey;
 
-    // Feed API client (for getting odds)
+    // Feed API client (for getting odds) - v2/odds
     this.feedClient = axios.create({
-      baseURL: this.feedBaseUrl,
+      baseURL: `${this.baseUrl}/v2/odds`,
       headers: {
         'X-API-Key': this.apiKey,
         'Accept': 'application/json',
@@ -21,9 +18,9 @@ class CloudbetAPI {
       timeout: 30000,
     });
 
-    // Trading API client (for placing bets)
+    // Trading API client (for placing bets) - v4/bets
     this.tradingClient = axios.create({
-      baseURL: this.tradingBaseUrl,
+      baseURL: `${this.baseUrl}/v4/bets`,
       headers: {
         'X-API-Key': this.apiKey,
         'Accept': 'application/json',
@@ -32,9 +29,9 @@ class CloudbetAPI {
       timeout: 30000,
     });
 
-    // Account API client (for balance, etc)
+    // Account API client (for balance, etc) - v2/account
     this.accountClient = axios.create({
-      baseURL: this.accountBaseUrl,
+      baseURL: `${this.baseUrl}/v2/account`,
       headers: {
         'X-API-Key': this.apiKey,
         'Accept': 'application/json',
@@ -69,7 +66,7 @@ class CloudbetAPI {
    */
   async getCompetitions(sportKey) {
     try {
-      const response = await this.feedClient.get(`/sports/${sportKey}/competitions`);
+      const response = await this.feedClient.get(`/competitions/${sportKey}`);
       logger.info(`Retrieved competitions for sport ${sportKey}`, {
         count: response.data.competitions?.length
       });
@@ -85,17 +82,15 @@ class CloudbetAPI {
   /**
    * Get events for a specific competition
    */
-  async getEvents(sportKey, competitionKey) {
+  async getEvents(competitionKey) {
     try {
-      const response = await this.feedClient.get(
-        `/sports/${sportKey}/competitions/${competitionKey}/events`
-      );
-      logger.info(`Retrieved events for ${sportKey}/${competitionKey}`, {
+      const response = await this.feedClient.get(`/events/${competitionKey}`);
+      logger.info(`Retrieved events for ${competitionKey}`, {
         count: response.data.events?.length
       });
       return response.data;
     } catch (error) {
-      logger.error(`Error fetching events for ${sportKey}/${competitionKey}`, {
+      logger.error(`Error fetching events for ${competitionKey}`, {
         error: error.message
       });
       throw error;
@@ -107,7 +102,7 @@ class CloudbetAPI {
    */
   async getSportEvents(sportKey) {
     try {
-      const response = await this.feedClient.get(`/sports/${sportKey}/events`);
+      const response = await this.feedClient.get(`/sports/${sportKey}`);
       logger.info(`Retrieved all events for sport ${sportKey}`, {
         count: response.data.events?.length
       });
@@ -143,7 +138,7 @@ class CloudbetAPI {
    */
   async getBalance() {
     try {
-      const response = await this.accountClient.get('/account/balances');
+      const response = await this.accountClient.get('/balances');
       logger.info('Retrieved account balance', {
         balances: response.data
       });
