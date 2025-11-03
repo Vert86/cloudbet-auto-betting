@@ -152,7 +152,25 @@ class PinnacleAPI {
       });
       return response.data;
     } catch (error) {
-      logger.error('Error fetching balance', { error: error.message });
+      logger.error('Error fetching balance', {
+        error: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        headers: error.response?.headers
+      });
+
+      if (error.response?.status === 403) {
+        logger.error('Authentication failed - 403 Forbidden. Possible causes:', {
+          causes: [
+            '1. API access not enabled for your account - Contact api@pinnacle.com',
+            '2. Incorrect username or password',
+            '3. Account not funded',
+            '4. IP address not whitelisted (max 2 IPs allowed)'
+          ]
+        });
+      }
+
       throw error;
     }
   }
