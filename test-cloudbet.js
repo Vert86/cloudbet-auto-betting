@@ -40,7 +40,7 @@ const testEndpoints = [
   {
     name: 'Account Balance',
     method: 'GET',
-    url: 'https://sports-api.cloudbet.com/pub/v2/account/balances',
+    url: `https://sports-api.cloudbet.com/pub/v1/account/currencies/${currency}/balance`,
     description: 'Verify account access and check balance'
   },
   {

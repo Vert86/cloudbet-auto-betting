@@ -28,21 +28,16 @@ class CloudbetAutoBettingSystem {
         throw new Error('Cloudbet API key not configured. Please set CLOUDBET_API_KEY in .env file');
       }
 
-      // Get account balance
-      const balanceData = await cloudbetAPI.getBalance();
+      // Get account balance for selected currency
+      const balanceData = await cloudbetAPI.getBalance(this.currency);
 
-      // Find the balance for our selected currency
-      const currencyBalance = balanceData.find(b => b.currency === this.currency);
-
-      if (!currencyBalance) {
-        throw new Error(`No ${this.currency} balance found. Available currencies: ${balanceData.map(b => b.currency).join(', ')}`);
-      }
-
-      this.bankroll = currencyBalance.available;
+      this.bankroll = balanceData.available || 0;
 
       logger.info('Account balance retrieved', {
         balance: this.bankroll,
         currency: this.currency,
+        bonus: balanceData.bonus || 0,
+        total: balanceData.total || this.bankroll,
       });
 
       if (this.bankroll < config.betting.minBetAmount) {
@@ -295,16 +290,13 @@ class CloudbetAutoBettingSystem {
    */
   async updateBankroll() {
     try {
-      const balanceData = await cloudbetAPI.getBalance();
-      const currencyBalance = balanceData.find(b => b.currency === this.currency);
+      const balanceData = await cloudbetAPI.getBalance(this.currency);
+      this.bankroll = balanceData.available || 0;
 
-      if (currencyBalance) {
-        this.bankroll = currencyBalance.available;
-        logger.info('Bankroll updated', {
-          balance: this.bankroll,
-          currency: this.currency
-        });
-      }
+      logger.info('Bankroll updated', {
+        balance: this.bankroll,
+        currency: this.currency
+      });
     } catch (error) {
       logger.error('Error updating bankroll', { error: error.message });
     }

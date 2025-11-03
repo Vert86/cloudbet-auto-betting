@@ -29,9 +29,9 @@ class CloudbetAPI {
       timeout: 30000,
     });
 
-    // Account API client (for balance, etc) - v2/account
+    // Account API client (for balance, etc) - v1/account
     this.accountClient = axios.create({
-      baseURL: `${this.baseUrl}/v2/account`,
+      baseURL: `${this.baseUrl}/v1/account`,
       headers: {
         'X-API-Key': this.apiKey,
         'Accept': 'application/json',
@@ -134,13 +134,17 @@ class CloudbetAPI {
   }
 
   /**
-   * Get account balance
+   * Get account balance for a specific currency
    */
-  async getBalance() {
+  async getBalance(currency = null) {
     try {
-      const response = await this.accountClient.get('/balances');
+      // Use configured currency if not specified
+      const curr = currency || config.cloudbet.currency || 'BTC';
+
+      const response = await this.accountClient.get(`/currencies/${curr}/balance`);
       logger.info('Retrieved account balance', {
-        balances: response.data
+        currency: curr,
+        balance: response.data
       });
       return response.data;
     } catch (error) {
@@ -156,11 +160,45 @@ class CloudbetAPI {
           causes: [
             '1. Invalid API key',
             '2. API key not activated - ensure you deposited minimum 10 EUR',
-            '3. Using Affiliate API key instead of Trading API key'
+            '3. Using Affiliate API key instead of Trading API key',
+            '4. Trading API endpoints require Trading API key (not Affiliate key)'
           ]
         });
       }
 
+      throw error;
+    }
+  }
+
+  /**
+   * Get all account balances
+   */
+  async getAllBalances() {
+    try {
+      // Try to get balances for common currencies
+      const currencies = ['BTC', 'ETH', 'USDT', 'LTC', 'BCH', 'USDC'];
+      const balances = [];
+
+      for (const currency of currencies) {
+        try {
+          const balance = await this.getBalance(currency);
+          if (balance && (balance.available > 0 || balance.bonus > 0)) {
+            balances.push({
+              currency,
+              ...balance
+            });
+          }
+        } catch (error) {
+          // Skip currencies that return errors
+          continue;
+        }
+      }
+
+      return balances;
+    } catch (error) {
+      logger.error('Error fetching all balances', {
+        error: error.message
+      });
       throw error;
     }
   }
