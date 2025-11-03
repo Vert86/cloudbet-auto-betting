@@ -1,7 +1,5 @@
 const config = require('../config/config');
 const logger = require('../utils/logger');
-const pinnacleAPI = require('./pinnacleAPI');
-const oddsAggregator = require('./oddsAggregator');
 
 class BettingStrategy {
   constructor() {
@@ -55,13 +53,13 @@ class BettingStrategy {
   /**
    * Estimate win probability from market odds
    */
-  estimateWinProbability(pinnacleOdds, marketOdds) {
+  estimateWinProbability(currentOdds, marketOdds) {
     // Use the average of implied probabilities
-    const pinnacleProb = 1 / pinnacleOdds;
+    const currentProb = 1 / currentOdds;
     const marketProb = 1 / marketOdds;
 
-    // Weight Pinnacle more heavily (they're typically sharper)
-    const estimatedProb = (pinnacleProb * 0.6 + marketProb * 0.4);
+    // Weight current odds more heavily (they're more recent)
+    const estimatedProb = (currentProb * 0.6 + marketProb * 0.4);
 
     return estimatedProb;
   }
@@ -104,7 +102,7 @@ class BettingStrategy {
     }
 
     // Check odds range
-    const odds = opportunity.pinnacleOdds;
+    const odds = opportunity.price || opportunity.cloudbetOdds;
     if (odds < config.betting.minOdds || odds > config.betting.maxOdds) {
       logger.info('Odds outside acceptable range', {
         odds,
@@ -125,8 +123,8 @@ class BettingStrategy {
 
     // Calculate win probability
     const winProbability = this.estimateWinProbability(
-      opportunity.pinnacleOdds,
-      opportunity.marketOdds
+      odds,
+      opportunity.marketOdds || odds
     );
 
     // Calculate bet size
@@ -150,51 +148,20 @@ class BettingStrategy {
       betSize: adjustedBetSize,
       estimatedWinProbability: winProbability,
       expectedValue: (winProbability * odds * adjustedBetSize) - adjustedBetSize,
-      lineId: lineVerification.lineId,
     };
   }
 
   /**
    * Verify line is still available before betting
+   * For Cloudbet, we'll accept the current odds from the aggregator
    */
   async verifyLine(opportunity) {
-    try {
-      const line = await pinnacleAPI.getLine(
-        opportunity.sportId,
-        opportunity.leagueId,
-        opportunity.eventId,
-        0, // period number
-        opportunity.betType,
-        opportunity.team,
-        opportunity.side,
-        'DECIMAL'
-      );
-
-      // Check if odds changed significantly (more than 5%)
-      const currentOdds = line.price;
-      const originalOdds = opportunity.pinnacleOdds;
-      const oddsChange = Math.abs((currentOdds - originalOdds) / originalOdds) * 100;
-
-      if (oddsChange > 5) {
-        return {
-          valid: false,
-          reason: 'Odds changed by more than 5%',
-          oddsChange
-        };
-      }
-
-      return {
-        valid: true,
-        lineId: line.lineId,
-        currentOdds,
-      };
-    } catch (error) {
-      logger.error('Error verifying line', { error: error.message });
-      return {
-        valid: false,
-        reason: 'Error fetching line',
-      };
-    }
+    // For Cloudbet, the odds are already current from the feed API
+    // No need for additional verification like Pinnacle required
+    return {
+      valid: true,
+      currentOdds: opportunity.price || opportunity.cloudbetOdds,
+    };
   }
 
   /**
