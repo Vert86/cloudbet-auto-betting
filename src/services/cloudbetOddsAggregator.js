@@ -47,8 +47,29 @@ class CloudbetOddsAggregator {
 
       return response.data;
     } catch (error) {
+      // 404 means sport not available in The Odds API - this is normal, not an error
+      if (error.response?.status === 404) {
+        logger.info('Sport not available in The Odds API, skipping external comparison', {
+          sport
+        });
+        return null;
+      }
+
+      // 401 means API key issue or quota exceeded
+      if (error.response?.status === 401) {
+        const remaining = error.response?.headers?.['x-requests-remaining'];
+        logger.warn('The Odds API quota exceeded or invalid key', {
+          sport,
+          requestsRemaining: remaining || 0,
+          message: 'System will continue using Cloudbet odds only'
+        });
+        return null;
+      }
+
       logger.error('Error fetching odds from The Odds API', {
-        error: error.message
+        error: error.message,
+        sport,
+        status: error.response?.status
       });
       return null;
     }
@@ -119,28 +140,36 @@ class CloudbetOddsAggregator {
 
     if (!event.markets) return markets;
 
-    for (const market of event.markets) {
-      const marketKey = market.key;
+    // Cloudbet markets is an object like { "basketball.moneyline": { submarkets: {...} } }
+    for (const [marketKey, marketData] of Object.entries(event.markets)) {
+      if (!marketData.submarkets) continue;
 
-      if (!markets[marketKey]) {
-        markets[marketKey] = {
-          marketUrl: market.url,
-          marketKey: market.key,
-          marketName: market.name,
-          selections: []
-        };
-      }
+      // Get the default submarket or first available
+      const submarketKey = 'default' in marketData.submarkets ?
+        'default' : Object.keys(marketData.submarkets)[0];
+
+      const submarket = marketData.submarkets[submarketKey];
+      if (!submarket || !submarket.selections) continue;
+
+      markets[marketKey] = {
+        marketKey: marketKey,
+        marketName: marketKey.split('.').pop(), // e.g., "moneyline" from "basketball.moneyline"
+        selections: []
+      };
 
       // Extract selections (betting options)
-      if (market.selections) {
-        for (const selection of market.selections) {
+      for (const selection of submarket.selections) {
+        // Only include enabled selections
+        if (selection.status === 'SELECTION_ENABLED') {
           markets[marketKey].selections.push({
-            selectionKey: selection.key,
-            name: selection.name,
+            selectionKey: selection.outcome,
+            name: selection.outcome,
             price: selection.price,
-            url: selection.url,
+            marketUrl: selection.marketUrl,
             params: selection.params,
-            side: selection.side
+            side: selection.outcome, // Use outcome as side (home/away/draw)
+            minStake: selection.minStake,
+            maxStake: selection.maxStake
           });
         }
       }
@@ -283,42 +312,68 @@ class CloudbetOddsAggregator {
 
   /**
    * Find opportunities within Cloudbet's own markets
+   * Without external comparison, look for favorable odds based on:
+   * 1. Low bookmaker margins (under 5%)
+   * 2. Odds in acceptable range (1.5-10.0)
+   * 3. Good liquidity (sufficient max stake)
    */
   findInternalOpportunities(cloudbetEvent, minEdgePercentage) {
     const opportunities = [];
 
-    // Look for moneyline (h2h) markets
-    const h2hMarket = Object.values(cloudbetEvent.markets).find(
-      m => m.marketKey === 'soccer.match_odds' ||
-           m.marketKey === 'basketball.match_odds' ||
-           m.marketKey.includes('match_odds') ||
-           m.marketKey.includes('moneyline')
+    // Look for all match odds / moneyline markets
+    const mainMarkets = Object.values(cloudbetEvent.markets).filter(
+      m => m.marketKey.includes('match_odds') ||
+           m.marketKey.includes('moneyline') ||
+           m.marketKey.includes('1x2') ||
+           m.marketKey.includes('winner')
     );
 
-    if (h2hMarket && h2hMarket.selections && h2hMarket.selections.length >= 2) {
-      // Check if odds represent value based on implied probabilities
-      const homeSelection = h2hMarket.selections.find(s => s.side === 'home');
-      const awaySelection = h2hMarket.selections.find(s => s.side === 'away');
+    for (const market of mainMarkets) {
+      if (!market.selections || market.selections.length < 2) continue;
 
-      if (homeSelection && awaySelection) {
-        const homeProb = 1 / homeSelection.price;
-        const awayProb = 1 / awaySelection.price;
-        const totalProb = homeProb + awayProb;
+      // Analyze each selection
+      for (const selection of market.selections) {
+        const price = selection.price;
 
-        // If total probability is less than 1, there might be value
-        // (though typically bookmaker margin makes this rare)
+        // Skip if odds outside acceptable range
+        if (price < 1.5 || price > 10.0) continue;
+
+        // Skip if max stake is too low (less than 5 USDT)
+        if (selection.maxStake && selection.maxStake < 5) continue;
+
+        // Calculate implied probability
+        const impliedProb = 1 / price;
+
+        // Calculate total market probability to find bookmaker margin
+        const totalProb = market.selections.reduce((sum, s) => sum + (1 / s.price), 0);
         const margin = totalProb - 1;
 
-        if (margin < 0.05 && margin > -0.02) { // Low margin, potential value
-          // Create opportunity for the higher implied value
-          if (homeProb < 0.5) {
-            opportunities.push(this.createOpportunity(
-              cloudbetEvent,
-              h2hMarket,
-              homeSelection,
-              'home',
-              minEdgePercentage / 2 // Lower threshold for internal
-            ));
+        // Only bet if bookmaker margin is reasonable (under 8%)
+        if (margin > 0.08) continue;
+
+        // For internal opportunities without external comparison:
+        // Look for odds where the bookmaker margin is low AND
+        // the odds suggest value (higher odds = more potential value)
+
+        // Calculate a pseudo-edge based on:
+        // 1. Low margin = better value
+        // 2. Reasonable odds (not too short, not too long)
+        const marginScore = Math.max(0, (0.08 - margin) * 100); // Higher when margin is lower
+        const oddsScore = Math.min(price / 3, 2); // Favor odds between 2-6
+        const pseudoEdge = marginScore * oddsScore;
+
+        // Only create opportunity if it meets minimum threshold
+        if (pseudoEdge >= minEdgePercentage) {
+          const opportunity = this.createOpportunity(
+            cloudbetEvent,
+            market,
+            selection,
+            selection.side,
+            pseudoEdge
+          );
+
+          if (opportunity) {
+            opportunities.push(opportunity);
           }
         }
       }
@@ -339,7 +394,7 @@ class CloudbetOddsAggregator {
       home: event.home,
       away: event.away,
       starts: event.starts,
-      marketUrl: market.marketUrl,
+      marketUrl: selection.marketUrl, // URL is in selection
       marketKey: market.marketKey,
       marketName: market.marketName,
       selectionKey: selection.selectionKey,
@@ -348,6 +403,8 @@ class CloudbetOddsAggregator {
       cloudbetOdds: selection.price,
       edge: edge.toFixed(2),
       price: selection.price,
+      minStake: selection.minStake,
+      maxStake: selection.maxStake
     };
   }
 
@@ -367,14 +424,114 @@ class CloudbetOddsAggregator {
   }
 
   /**
-   * Check if team names match (fuzzy matching)
+   * Check if team names match (fuzzy matching with abbreviation support)
    */
   teamsMatch(team1, team2) {
-    const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9\s]/g, '');
     const norm1 = normalize(team1);
     const norm2 = normalize(team2);
 
-    return norm1.includes(norm2) || norm2.includes(norm1);
+    // Direct substring match
+    if (norm1.includes(norm2) || norm2.includes(norm1)) {
+      return true;
+    }
+
+    // Extract last word (team name without city)
+    const getTeamName = (str) => {
+      const parts = str.trim().split(/\s+/);
+      return parts[parts.length - 1];
+    };
+
+    const teamName1 = getTeamName(norm1);
+    const teamName2 = getTeamName(norm2);
+
+    // Match on team name only (e.g., "Nets" matches "Nets")
+    if (teamName1 === teamName2) {
+      return true;
+    }
+
+    // Handle abbreviations by checking if abbreviation matches first letters
+    // e.g., "BKN" should match "Brooklyn" or "MIN" should match "Minnesota"
+    const words1 = norm1.split(/\s+/);
+    const words2 = norm2.split(/\s+/);
+
+    // Check if either is an abbreviation (short string without spaces or single word)
+    if (words1.length === 1 && words1[0].length <= 4) {
+      // team1 might be abbreviation
+      const abbr = words1[0];
+      // Check if it matches first letters of words in team2
+      const firstLetters = words2.slice(0, -1).map(w => w[0]).join(''); // Exclude last word (team name)
+      if (abbr === firstLetters) {
+        return true;
+      }
+    }
+
+    if (words2.length === 1 && words2[0].length <= 4) {
+      // team2 might be abbreviation
+      const abbr = words2[0];
+      // Check if it matches first letters of words in team1
+      const firstLetters = words1.slice(0, -1).map(w => w[0]).join(''); // Exclude last word (team name)
+      if (abbr === firstLetters) {
+        return true;
+      }
+    }
+
+    // Special case: Check if abbreviation appears in full name
+    // e.g., "BKN Nets" vs "Brooklyn Nets" - extract "bkn" and check if "brooklyn" starts with "b", etc.
+    const checkAbbreviation = (abbr, fullName) => {
+      if (abbr.length > fullName.length) return false;
+
+      // Common team abbreviations mapping
+      const abbreviations = {
+        'bkn': 'brooklyn',
+        'min': 'minnesota',
+        'phi': 'philadelphia',
+        'was': 'washington',
+        'nyk': 'newyork',
+        'nop': 'neworleans',
+        'por': 'portland',
+        'sac': 'sacramento',
+        'atl': 'atlanta',
+        'cha': 'charlotte',
+        'chi': 'chicago',
+        'cle': 'cleveland',
+        'dal': 'dallas',
+        'den': 'denver',
+        'det': 'detroit',
+        'gsw': 'goldenstate',
+        'hou': 'houston',
+        'ind': 'indiana',
+        'lac': 'losangelesclippers',
+        'lal': 'losangeleslakers',
+        'mem': 'memphis',
+        'mia': 'miami',
+        'mil': 'milwaukee',
+        'okc': 'oklahomacity',
+        'orl': 'orlando',
+        'phx': 'phoenix',
+        'sas': 'sanantonio',
+        'tor': 'toronto',
+        'uta': 'utah'
+      };
+
+      // Check if abbreviation is in our mapping
+      if (abbreviations[abbr]) {
+        return fullName.includes(abbreviations[abbr]) || abbreviations[abbr].includes(fullName);
+      }
+
+      return false;
+    };
+
+    // Try both directions
+    for (const word1 of words1) {
+      for (const word2 of words2) {
+        if (checkAbbreviation(word1, word2) || checkAbbreviation(word2, word1)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   /**

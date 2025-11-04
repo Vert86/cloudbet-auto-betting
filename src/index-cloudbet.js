@@ -12,8 +12,19 @@ class CloudbetAutoBettingSystem {
     this.bankroll = 0;
     this.currency = config.cloudbet.currency || 'BTC';
     this.sports = [];
-    // Focus on popular sports with good liquidity
-    this.targetSports = ['soccer', 'basketball', 'tennis', 'american-football', 'baseball'];
+    // Focus on popular sports with good liquidity - expanded list for more opportunities
+    this.targetSports = [
+      'soccer',
+      'basketball',
+      'american-football',
+      'baseball',
+      'ice-hockey',
+      'tennis',
+      'cricket',
+      'rugby-union',
+      'mma',
+      'boxing'
+    ];
   }
 
   /**

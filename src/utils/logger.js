@@ -17,7 +17,7 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json()
   ),
-  defaultMeta: { service: 'pinnacle-auto-betting' },
+  defaultMeta: { service: 'cloudbet-auto-betting' },
   transports: [
     // Write all logs to console
     new winston.transports.Console({

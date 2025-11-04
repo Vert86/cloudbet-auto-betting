@@ -39,15 +39,20 @@ class BettingStrategy {
     // Calculate bet size
     let betSize = bankroll * adjustedKelly;
 
-    // Apply limits
-    betSize = Math.max(betSize, config.betting.minBetAmount);
+    // Apply maximum limits first
     betSize = Math.min(betSize, config.betting.maxBetAmount);
 
     // Also limit by bankroll percentage
     const maxByPercentage = bankroll * (config.riskManagement.bankrollPercentagePerBet / 100);
     betSize = Math.min(betSize, maxByPercentage);
 
-    return Math.round(betSize * 100) / 100; // Round to 2 decimals
+    // Round to 2 decimals
+    betSize = Math.round(betSize * 100) / 100;
+
+    // Ensure minimum bet size is respected AFTER all calculations and rounding
+    betSize = Math.max(betSize, config.betting.minBetAmount);
+
+    return betSize;
   }
 
   /**
@@ -198,7 +203,7 @@ class BettingStrategy {
       adjustment *= 0.7;
     }
 
-    const adjustedSize = baseBetSize * adjustment;
+    let adjustedSize = baseBetSize * adjustment;
     logger.info('Adjusted bet size based on performance', {
       baseBetSize,
       adjustedSize,
@@ -206,7 +211,13 @@ class BettingStrategy {
       losingStreak,
     });
 
-    return Math.round(adjustedSize * 100) / 100;
+    // Round to 2 decimals
+    adjustedSize = Math.round(adjustedSize * 100) / 100;
+
+    // Ensure minimum bet size is respected after performance adjustment
+    adjustedSize = Math.max(adjustedSize, config.betting.minBetAmount);
+
+    return adjustedSize;
   }
 
   /**
