@@ -122,7 +122,10 @@ class MultiBookmakerOddsAggregator {
     }
 
     // Normalize team names for matching
-    const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normalize = (str) => {
+      if (!str || typeof str !== 'string') return '';
+      return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    };
 
     const cbHome = normalize(cloudbetEvent.home);
     const cbAway = normalize(cloudbetEvent.away);
