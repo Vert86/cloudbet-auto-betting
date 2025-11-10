@@ -24,7 +24,7 @@ class MultiBookmakerOddsAggregator {
     this.sharpBookmakers = ['pinnacle', 'bookmaker', 'betcris', 'circa'];
 
     // Minimum bookmakers required for reliable edge detection
-    this.minBookmakers = 5;
+    this.minBookmakers = parseInt(process.env.MIN_BOOKMAKERS) || 4;
 
     // Cache for reducing API calls
     this.oddsCache = new Map();
@@ -124,12 +124,22 @@ class MultiBookmakerOddsAggregator {
     // Normalize team names for matching
     const normalize = (str) => {
       if (!str || typeof str !== 'string') return '';
-      return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+      // Remove common suffixes
+      let cleaned = str.toLowerCase();
+      cleaned = cleaned.replace(/\s*(fc|afc|cf|srl|srl\s*fc|united|city|town|athletic|club)\s*$/gi, '');
+      // Remove all non-alphanumeric except spaces
+      cleaned = cleaned.replace(/[^a-z0-9\s]/g, '');
+      // Remove extra spaces
+      cleaned = cleaned.replace(/\s+/g, '');
+      return cleaned;
     };
 
     const cbHome = normalize(cloudbetEvent.home);
     const cbAway = normalize(cloudbetEvent.away);
-    const cbTime = new Date(cloudbetEvent.starts);
+
+    // Check if cutoffTime or starts exists
+    const cbTimeField = cloudbetEvent.cutoffTime || cloudbetEvent.starts;
+    const cbTime = cbTimeField ? new Date(cbTimeField) : null;
 
     // Find matching event
     for (const oddsEvent of oddsApiEvents) {
@@ -137,15 +147,18 @@ class MultiBookmakerOddsAggregator {
       const oaAway = normalize(oddsEvent.away_team);
       const oaTime = new Date(oddsEvent.commence_time);
 
-      // Check team names match
-      const homeMatch = cbHome.includes(oaHome) || oaHome.includes(cbHome) ||
-                       this.fuzzyMatch(cbHome, oaHome);
-      const awayMatch = cbAway.includes(oaAway) || oaAway.includes(cbAway) ||
-                       this.fuzzyMatch(cbAway, oaAway);
+      // Check team names match (after normalization, exact match or contains)
+      const homeMatch = cbHome === oaHome || cbHome.includes(oaHome) || oaHome.includes(cbHome) ||
+                       this.fuzzyMatch(cloudbetEvent.home, oddsEvent.home_team);
+      const awayMatch = cbAway === oaAway || cbAway.includes(oaAway) || oaAway.includes(cbAway) ||
+                       this.fuzzyMatch(cloudbetEvent.away, oddsEvent.away_team);
 
-      // Check time is within 6 hours
-      const timeDiff = Math.abs(cbTime - oaTime) / (1000 * 60 * 60);
-      const timeMatch = timeDiff < 6;
+      // Check time is within 6 hours (skip if cbTime not available)
+      let timeMatch = true; // Default to true if time not available
+      if (cbTime && !isNaN(cbTime)) {
+        const timeDiff = Math.abs(cbTime - oaTime) / (1000 * 60 * 60);
+        timeMatch = timeDiff < 6;
+      }
 
       if (homeMatch && awayMatch && timeMatch) {
         logger.info('Matched Cloudbet event to Odds API', {
@@ -315,11 +328,12 @@ class MultiBookmakerOddsAggregator {
             // Create opportunity object
             const opportunity = {
               // Event info
-              eventId: cbEvent.eventId,
-              eventKey: cbEvent.eventKey,
+              eventId: cbEvent.eventId || cbEvent.id,
+              eventKey: cbEvent.eventKey || cbEvent.key,
               home: cbEvent.home,
               away: cbEvent.away,
-              starts: cbEvent.starts,
+              starts: oddsApiEvent.commence_time, // Use Odds API commence time
+              cutoffTime: cbEvent.cutoffTime, // Keep Cloudbet cutoffTime if available
               sport: sportKey,
               league: cbEvent.competition?.name || 'unknown',
 

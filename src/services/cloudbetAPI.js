@@ -140,10 +140,19 @@ class CloudbetAPI {
 
       logger.info(`Retrieved ${allEvents.length} total events for sport ${sportKey}`);
 
+      // Normalize events to extract team names from objects
+      const normalizedEvents = allEvents.map(event => ({
+        ...event,
+        home: typeof event.home === 'object' ? event.home.name : event.home,
+        away: typeof event.away === 'object' ? event.away.name : event.away,
+        homeObject: typeof event.home === 'object' ? event.home : null,
+        awayObject: typeof event.away === 'object' ? event.away : null,
+      }));
+
       return {
         sport: sportResp.data.key,
         name: sportResp.data.name,
-        events: allEvents
+        events: normalizedEvents
       };
     } catch (error) {
       logger.error(`Error fetching events for sport ${sportKey}`, {

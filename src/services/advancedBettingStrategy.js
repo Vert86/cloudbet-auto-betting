@@ -417,8 +417,9 @@ class AdvancedBettingStrategy {
 
     // STEP 1: Analyze Market Efficiency
     const efficiency = await this.analyzeMarketEfficiency(opportunity);
-    if (efficiency.score < 50) {
-      logger.info('Market efficiency score too low', { score: efficiency.score });
+    const minEfficiencyScore = parseInt(process.env.MIN_EFFICIENCY_SCORE) || 50;
+    if (efficiency.score < minEfficiencyScore) {
+      logger.info('Market efficiency score too low', { score: efficiency.score, required: minEfficiencyScore });
       return null;
     }
 
