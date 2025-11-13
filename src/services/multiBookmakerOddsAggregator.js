@@ -14,9 +14,10 @@ class MultiBookmakerOddsAggregator {
 
     // Sport mapping: Cloudbet keys -> The Odds API keys
     this.sportMapping = {
-      'soccer': ['soccer_epl', 'soccer_spain_la_liga', 'soccer_germany_bundesliga', 'soccer_italy_serie_a', 'soccer_france_ligue_one'],
-      'basketball': ['basketball_nba'],
-      'american-football': ['americanfootball_nfl'],
+      'soccer': ['soccer_epl', 'soccer_spain_la_liga', 'soccer_germany_bundesliga', 'soccer_italy_serie_a', 'soccer_france_ligue_one', 'soccer_fifa_world_cup_qualifiers_europe'],
+      'basketball': ['basketball_nba', 'basketball_ncaab', 'basketball_euroleague'],
+      'american-football': ['americanfootball_nfl', 'americanfootball_ncaaf'],
+      'ice-hockey': ['icehockey_nhl', 'icehockey_sweden_hockey_league'],
       'tennis': ['tennis_atp', 'tennis_wta'],
     };
 

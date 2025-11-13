@@ -20,7 +20,13 @@ class ProductionBot {
 
     // Configuration
     this.scanInterval = 5 * 60 * 1000; // 5 minutes
-    this.sports = ['soccer']; // Start with soccer only
+    // Include sports with daily games for faster results
+    this.sports = [
+      'ice-hockey',     // NHL - games almost daily
+      'basketball',     // NBA - games almost daily
+      'american-football', // NFL - weekend games
+      'soccer'          // Soccer - keep for coverage
+    ];
     this.maxBetsPerDay = parseInt(process.env.MAX_BETS_PER_DAY) || 5;
     this.maxDailyLoss = parseFloat(process.env.MAX_DAILY_LOSS) || 50;
 
