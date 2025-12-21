@@ -18,6 +18,12 @@ class FundamentalAnalysisPredictor {
     this.ballDontLieURL = 'https://api.balldontlie.io/v1';
     this.ballDontLieKey = process.env.BALLDONTLIE_API_KEY || null;
 
+    // Caching to avoid rate limits (BallDontLie has strict limits on free tier)
+    this.nbaTeamsCache = null;
+    this.nbaTeamsCacheTime = null;
+    this.nbaStandingsCache = new Map(); // Cache standings per team
+    this.cacheDuration = 30 * 60 * 1000; // 30 minutes
+
     // Thresholds for predictions
     this.strongFavoriteThreshold = 0.65; // Win rate difference
     this.rankingDifferenceThreshold = 5; // Ranking positions
@@ -68,13 +74,20 @@ class FundamentalAnalysisPredictor {
    */
   async predictNBA(event) {
     try {
-      // Get current season standings
-      const currentSeason = new Date().getFullYear();
+      // Check cache for NBA teams to avoid rate limits
+      if (!this.nbaTeamsCache || !this.nbaTeamsCacheTime ||
+          Date.now() - this.nbaTeamsCacheTime > this.cacheDuration) {
+        // BallDontLie provides team stats - requires API key as of 2025
+        const headers = this.ballDontLieKey ? { 'Authorization': this.ballDontLieKey } : {};
+        const teamsResponse = await axios.get(`${this.ballDontLieURL}/teams`, { headers });
+        this.nbaTeamsCache = teamsResponse.data.data;
+        this.nbaTeamsCacheTime = Date.now();
+        logger.info('Fetched and cached NBA teams', { count: this.nbaTeamsCache.length });
+      } else {
+        logger.info('Using cached NBA teams', { count: this.nbaTeamsCache.length });
+      }
 
-      // BallDontLie provides team stats - requires API key as of 2025
-      const headers = this.ballDontLieKey ? { 'Authorization': this.ballDontLieKey } : {};
-      const teamsResponse = await axios.get(`${this.ballDontLieURL}/teams`, { headers });
-      const teams = teamsResponse.data.data;
+      const teams = this.nbaTeamsCache;
 
       // Find home and away teams
       const homeTeam = this.findTeam(teams, event.home);
@@ -125,30 +138,57 @@ class FundamentalAnalysisPredictor {
     try {
       const currentSeason = new Date().getFullYear();
 
-      // BallDontLie provides team stats - fetch games to calculate records
-      const headers = this.ballDontLieKey ? { 'Authorization': this.ballDontLieKey } : {};
+      // Check cache for each team's standings
+      const homeCacheKey = `${homeTeamId}_${currentSeason}`;
+      const awayCacheKey = `${awayTeamId}_${currentSeason}`;
 
-      const homeGamesResponse = await axios.get(`${this.ballDontLieURL}/games`, {
-        params: {
-          seasons: [currentSeason],
-          team_ids: [homeTeamId],
-          per_page: 100
-        },
-        headers
-      });
+      let homeRecord, awayRecord;
 
-      const awayGamesResponse = await axios.get(`${this.ballDontLieURL}/games`, {
-        params: {
-          seasons: [currentSeason],
-          team_ids: [awayTeamId],
-          per_page: 100
-        },
-        headers
-      });
+      // Fetch home team data (with caching)
+      if (this.nbaStandingsCache.has(homeCacheKey)) {
+        const cached = this.nbaStandingsCache.get(homeCacheKey);
+        if (Date.now() - cached.timestamp < this.cacheDuration) {
+          homeRecord = cached.record;
+          logger.info('Using cached standings for team', { teamId: homeTeamId });
+        }
+      }
 
-      // Calculate win/loss records from completed games
-      const homeRecord = this.calculateRecord(homeGamesResponse.data.data, homeTeamId);
-      const awayRecord = this.calculateRecord(awayGamesResponse.data.data, awayTeamId);
+      if (!homeRecord) {
+        const headers = this.ballDontLieKey ? { 'Authorization': this.ballDontLieKey } : {};
+        const homeGamesResponse = await axios.get(`${this.ballDontLieURL}/games`, {
+          params: {
+            seasons: [currentSeason],
+            team_ids: [homeTeamId],
+            per_page: 100
+          },
+          headers
+        });
+        homeRecord = this.calculateRecord(homeGamesResponse.data.data, homeTeamId);
+        this.nbaStandingsCache.set(homeCacheKey, { record: homeRecord, timestamp: Date.now() });
+      }
+
+      // Fetch away team data (with caching)
+      if (this.nbaStandingsCache.has(awayCacheKey)) {
+        const cached = this.nbaStandingsCache.get(awayCacheKey);
+        if (Date.now() - cached.timestamp < this.cacheDuration) {
+          awayRecord = cached.record;
+          logger.info('Using cached standings for team', { teamId: awayTeamId });
+        }
+      }
+
+      if (!awayRecord) {
+        const headers = this.ballDontLieKey ? { 'Authorization': this.ballDontLieKey } : {};
+        const awayGamesResponse = await axios.get(`${this.ballDontLieURL}/games`, {
+          params: {
+            seasons: [currentSeason],
+            team_ids: [awayTeamId],
+            per_page: 100
+          },
+          headers
+        });
+        awayRecord = this.calculateRecord(awayGamesResponse.data.data, awayTeamId);
+        this.nbaStandingsCache.set(awayCacheKey, { record: awayRecord, timestamp: Date.now() });
+      }
 
       // Estimate rankings based on win percentage
       const homeWinPct = homeRecord.wins / (homeRecord.wins + homeRecord.losses) || 0.5;
