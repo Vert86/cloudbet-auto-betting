@@ -1,6 +1,7 @@
 const config = require('../config/config');
 const logger = require('../utils/logger');
 const axios = require('axios');
+const FundamentalAnalysisPredictor = require('./fundamentalAnalysisPredictor');
 
 /**
  * Advanced Betting Strategy with Market Inefficiency Detection
@@ -19,6 +20,10 @@ class AdvancedBettingStrategy {
     this.closingLines = {}; // Track final odds before event starts
     this.clvHistory = []; // Track Closing Line Value performance
 
+    // NEW: Fundamental analysis predictor
+    this.predictor = new FundamentalAnalysisPredictor();
+    this.useFundamentalAnalysis = process.env.USE_FUNDAMENTAL_ANALYSIS === 'true';
+
     this.dailyStats = {
       date: new Date().toDateString(),
       betsPlaced: 0,
@@ -33,6 +38,12 @@ class AdvancedBettingStrategy {
 
     // Sharp bookmakers (most accurate odds)
     this.sharpBookmakers = ['pinnacle', 'bookmaker', 'betcris', 'circa'];
+    const envValue = process.env.MIN_SHARP_BOOKMAKERS;
+    console.log('[DEBUG] MIN_SHARP_BOOKMAKERS from env:', envValue);
+    this.minSharpBookmakers = envValue !== undefined
+      ? parseInt(envValue)
+      : 0;
+    console.log('[DEBUG] this.minSharpBookmakers set to:', this.minSharpBookmakers);
 
     // Soft bookmakers (slower to adjust, targets for value)
     this.softBookmakers = ['cloudbet', 'bovada', 'betonline', 'mybookie'];
@@ -49,7 +60,7 @@ class AdvancedBettingStrategy {
     this.premiumMarkets = ['moneyline', 'match_odds', 'spreads', 'h2h'];
 
     // Minimum number of bookmakers needed for comparison
-    this.minBookmakersForComparison = 5;
+    this.minBookmakersForComparison = parseInt(process.env.MIN_BOOKMAKERS) || 2;
   }
 
   /**
@@ -256,7 +267,18 @@ class AdvancedBettingStrategy {
       .map(book => book.odds[side])
       .filter(odds => odds && odds > 0);
 
-    const oddsToUse = sharpOdds.length >= 2 ? sharpOdds : oddsForSide;
+    // ✅ REQUIRE MINIMUM SHARP BOOKMAKERS - Don't use soft bookmaker consensus
+    if (sharpOdds.length < this.minSharpBookmakers) {
+      logger.info('Insufficient sharp bookmakers for reliable edge', {
+        side,
+        sharpBookCount: sharpOdds.length,
+        required: this.minSharpBookmakers,
+        totalBookmakers: oddsForSide.length
+      });
+      return null; // Reject this opportunity
+    }
+
+    const oddsToUse = sharpOdds; // ALWAYS use sharp odds only
 
     // Calculate consensus (average) odds
     const avgOdds = oddsToUse.reduce((sum, odds) => sum + odds, 0) / oddsToUse.length;
@@ -413,6 +435,46 @@ class AdvancedBettingStrategy {
     if (this.dailyStats.profit < -config.betting.maxDailyLoss) {
       logger.info('Daily loss limit reached');
       return null;
+    }
+
+    // STEP 0: Fundamental Analysis (NEW STRATEGY)
+    if (this.useFundamentalAnalysis) {
+      const prediction = await this.predictor.predictWinner(opportunity, opportunity.sport);
+
+      if (prediction) {
+        // Check if our prediction matches the side we're considering
+        const predictedSide = prediction.predicted; // 'home' or 'away'
+        const bettingSide = opportunity.side; // 'home', 'away', or 'draw'
+
+        // Only bet if our prediction matches AND we have high confidence
+        if (predictedSide !== bettingSide) {
+          logger.info('❌ Fundamental analysis predicts different outcome', {
+            predicted: prediction.predictedTeam,
+            betting: bettingSide,
+            confidence: (prediction.confidence * 100).toFixed(1) + '%'
+          });
+          return null;
+        }
+
+        // Require minimum confidence threshold
+        const minConfidence = parseFloat(process.env.MIN_PREDICTION_CONFIDENCE) || 0.60;
+        if (prediction.confidence < minConfidence) {
+          logger.info('❌ Prediction confidence too low', {
+            confidence: (prediction.confidence * 100).toFixed(1) + '%',
+            required: (minConfidence * 100).toFixed(1) + '%'
+          });
+          return null;
+        }
+
+        logger.info('✅ Fundamental analysis supports this bet', {
+          predicted: prediction.predictedTeam,
+          confidence: (prediction.confidence * 100).toFixed(1) + '%',
+          reasoning: prediction.reasoning
+        });
+
+        // Override true probability calculation with our prediction
+        opportunity.fundamentalPrediction = prediction;
+      }
     }
 
     // STEP 1: Analyze Market Efficiency
