@@ -452,7 +452,9 @@ class FundamentalAnalysisPredictor {
 
     try {
       // API-Sports Hockey endpoint for standings
-      const currentSeason = new Date().getFullYear();
+      // NOTE: Free tier only has 2023 season data; current season requires paid tier
+      // Using 2023 standings as baseline for team strength (still valuable for predictions)
+      const season = 2023; // Most recent available season on free tier
       const standingsResponse = await axios.get(`${this.nhlURL}/standings`, {
         headers: {
           'x-rapidapi-key': this.apiKey,
@@ -460,7 +462,7 @@ class FundamentalAnalysisPredictor {
         },
         params: {
           league: 57, // NHL
-          season: currentSeason
+          season: season
         }
       });
 
@@ -543,7 +545,9 @@ class FundamentalAnalysisPredictor {
 
     try {
       // API-Sports American Football endpoint for standings
-      const currentSeason = new Date().getFullYear();
+      // NOTE: Free tier only has 2023 season data; current season requires paid tier
+      // Using 2023 standings as baseline for team strength (still valuable for predictions)
+      const season = 2023; // Most recent available season on free tier
       const standingsResponse = await axios.get(`${this.baseURL}/standings`, {
         headers: {
           'x-rapidapi-key': this.apiKey,
@@ -551,7 +555,7 @@ class FundamentalAnalysisPredictor {
         },
         params: {
           league: 1, // NFL
-          season: currentSeason
+          season: season
         }
       });
 
@@ -610,18 +614,46 @@ class FundamentalAnalysisPredictor {
   findNFLTeam(standings, teamName) {
     const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
 
-    for (const conference of standings) {
-      if (!conference || !Array.isArray(conference)) continue;
+    // Common NFL abbreviations mapping
+    const abbrevMap = {
+      'kc': 'kansascity',
+      'sf': 'sanfrancisco',
+      'la': 'losangeles',
+      'ne': 'newengland',
+      'no': 'neworleans',
+      'tb': 'tampabay',
+      'gb': 'greenbay'
+    };
 
-      for (const team of conference) {
-        if (!team || !team.team) continue;
+    // Extract city abbreviation if present (e.g., "KC" from "KC Chiefs")
+    const parts = teamName.split(' ');
+    let searchTerms = [normalized];
 
-        const apiName = team.team.name.toLowerCase().replace(/[^a-z]/g, '');
-        if (apiName.includes(normalized) || normalized.includes(apiName)) {
+    if (parts.length > 1) {
+      const firstPart = parts[0].toLowerCase().replace(/[^a-z]/g, '');
+      const secondPart = parts.slice(1).join('').toLowerCase().replace(/[^a-z]/g, '');
+
+      // If first part is an abbreviation, expand it
+      if (abbrevMap[firstPart]) {
+        searchTerms.push(abbrevMap[firstPart] + secondPart);
+      }
+      // Also try just the team name (e.g., "Chiefs")
+      searchTerms.push(secondPart);
+    }
+
+    // Standings is a flat array of team objects
+    for (const teamData of standings) {
+      if (!teamData || !teamData.team) continue;
+
+      const apiName = teamData.team.name.toLowerCase().replace(/[^a-z]/g, '');
+
+      // Try all search terms
+      for (const term of searchTerms) {
+        if (apiName.includes(term) || term.includes(apiName)) {
           return {
-            wins: team.games.win || 0,
-            losses: team.games.lose || 0,
-            position: team.position || 16
+            wins: teamData.won || 0,
+            losses: teamData.lost || 0,
+            position: teamData.position || 16
           };
         }
       }
