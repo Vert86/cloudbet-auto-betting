@@ -314,7 +314,8 @@ class FundamentalAnalysisPredictor {
     const awayWinRate = awayTeam.record.wins / (awayTeam.record.wins + awayTeam.record.losses);
     const winRateDiff = homeWinRate - awayWinRate;
 
-    if (Math.abs(winRateDiff) > 0.2) {
+    // Lower threshold to 10% for more sensitive predictions
+    if (Math.abs(winRateDiff) > 0.10) {
       const winRateBonus = winRateDiff * 100;
       homeScore += winRateBonus;
       awayScore -= winRateBonus;
@@ -445,36 +446,23 @@ class FundamentalAnalysisPredictor {
   }
 
   async predictNHL(event) {
-    if (!this.apiKey) {
-      logger.warn('API-Sports key not configured, using basic NHL prediction');
-      return this.predictBasic(event, 'NHL');
-    }
-
     try {
-      // API-Sports Hockey endpoint for standings
-      // NOTE: Free tier only has 2023 season data; current season requires paid tier
-      // Using 2023 standings as baseline for team strength (still valuable for predictions)
-      const season = 2023; // Most recent available season on free tier
-      const standingsResponse = await axios.get(`${this.nhlURL}/standings`, {
-        headers: {
-          'x-rapidapi-key': this.apiKey,
-          'x-rapidapi-host': 'v1.hockey.api-sports.io'
-        },
-        params: {
-          league: 57, // NHL
-          season: season
-        }
+      // Official NHL API - Free, provides current 2024-2025 season data
+      logger.info('Fetching NHL standings from official NHL API');
+
+      const standingsResponse = await axios.get('https://api-web.nhle.com/v1/standings/now', {
+        timeout: 10000
       });
 
-      if (!standingsResponse.data || !standingsResponse.data.response || !standingsResponse.data.response[0]) {
+      if (!standingsResponse.data || !standingsResponse.data.standings) {
         logger.warn('No NHL standings data available');
         return this.predictBasic(event, 'NHL');
       }
 
       // Find teams in standings
-      const standings = standingsResponse.data.response[0]; // First array contains all teams
-      const homeTeam = this.findNHLTeam(standings, event.home);
-      const awayTeam = this.findNHLTeam(standings, event.away);
+      const standings = standingsResponse.data.standings;
+      const homeTeam = this.findNHLTeamInOfficialAPI(standings, event.home);
+      const awayTeam = this.findNHLTeamInOfficialAPI(standings, event.away);
 
       if (!homeTeam || !awayTeam) {
         logger.warn('Could not find NHL teams in standings', {
@@ -537,42 +525,111 @@ class FundamentalAnalysisPredictor {
     return null;
   }
 
-  async predictNFL(event) {
-    if (!this.apiKey) {
-      logger.warn('API-Sports key not configured, using basic NFL prediction');
-      return this.predictBasic(event, 'NFL');
+  /**
+   * Find NHL team in official NHL API standings
+   */
+  findNHLTeamInOfficialAPI(standings, teamName) {
+    const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
+
+    // Common NHL abbreviations
+    const abbrevMap = {
+      'la': 'losangeles',
+      'tb': 'tampabay',
+      'sj': 'sanjose',
+      'nj': 'newjersey'
+    };
+
+    const parts = teamName.split(' ');
+    let searchTerms = [normalized];
+
+    if (parts.length > 1) {
+      const firstPart = parts[0].toLowerCase().replace(/[^a-z]/g, '');
+      const secondPart = parts.slice(1).join('').toLowerCase().replace(/[^a-z]/g, '');
+
+      if (abbrevMap[firstPart]) {
+        searchTerms.push(abbrevMap[firstPart] + secondPart);
+      }
+      searchTerms.push(secondPart);
     }
 
-    try {
-      // API-Sports American Football endpoint for standings
-      // NOTE: Free tier only has 2023 season data; current season requires paid tier
-      // Using 2023 standings as baseline for team strength (still valuable for predictions)
-      const season = 2023; // Most recent available season on free tier
-      const standingsResponse = await axios.get(`${this.baseURL}/standings`, {
-        headers: {
-          'x-rapidapi-key': this.apiKey,
-          'x-rapidapi-host': 'v1.american-football.api-sports.io'
-        },
-        params: {
-          league: 1, // NFL
-          season: season
+    for (const team of standings) {
+      if (!team || !team.teamName) continue;
+
+      const apiName = team.teamName.default.toLowerCase().replace(/[^a-z]/g, '');
+
+      for (const term of searchTerms) {
+        if (apiName.includes(term) || term.includes(apiName)) {
+          // NHL uses wins, losses, and OT losses
+          // Total losses = regulation losses + OT losses
+          const totalLosses = team.losses + team.otLosses;
+          return {
+            wins: team.wins || 0,
+            losses: totalLosses || 0,
+            position: team.conferenceSequence || 16
+          };
         }
+      }
+    }
+
+    return null;
+  }
+
+  async predictNFL(event) {
+    try {
+      // ESPN NFL API - Free, unofficial but reliable
+      // Provides current 2024-2025 season data
+      logger.info('Fetching NFL team data from ESPN API');
+
+      // Get all NFL teams
+      const teamsResponse = await axios.get('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams', {
+        timeout: 10000
       });
 
-      if (!standingsResponse.data || !standingsResponse.data.response) {
-        logger.warn('No NFL standings data available');
+      if (!teamsResponse.data || !teamsResponse.data.sports) {
+        logger.warn('No NFL teams data available from ESPN');
         return this.predictBasic(event, 'NFL');
       }
 
-      // Find teams in standings
-      const standings = standingsResponse.data.response;
-      const homeTeam = this.findNFLTeam(standings, event.home);
-      const awayTeam = this.findNFLTeam(standings, event.away);
+      const allTeams = teamsResponse.data.sports[0]?.leagues[0]?.teams || [];
+
+      // Find home and away teams
+      const homeTeamData = this.findNFLTeamInESPN(allTeams, event.home);
+      const awayTeamData = this.findNFLTeamInESPN(allTeams, event.away);
+
+      if (!homeTeamData || !awayTeamData) {
+        logger.warn('Could not find NFL teams in ESPN data', {
+          home: event.home,
+          away: event.away,
+          homeFound: !!homeTeamData,
+          awayFound: !!awayTeamData
+        });
+        return this.predictBasic(event, 'NFL');
+      }
+
+      // Fetch detailed team records
+      logger.info('Fetching records for NFL teams', {
+        homeId: homeTeamData.id,
+        homeName: homeTeamData.name,
+        awayId: awayTeamData.id,
+        awayName: awayTeamData.name
+      });
+
+      const [homeTeam, awayTeam] = await Promise.all([
+        this.getNFLTeamRecord(homeTeamData.id),
+        this.getNFLTeamRecord(awayTeamData.id)
+      ]);
+
+      logger.info('Received NFL team records', {
+        homeTeam: homeTeam,
+        awayTeam: awayTeam
+      });
 
       if (!homeTeam || !awayTeam) {
-        logger.warn('Could not find NFL teams in standings', {
+        logger.warn('Could not get NFL team records', {
           home: event.home,
-          away: event.away
+          away: event.away,
+          homeRecord: homeTeam,
+          awayRecord: awayTeam
         });
         return this.predictBasic(event, 'NFL');
       }
@@ -660,6 +717,88 @@ class FundamentalAnalysisPredictor {
     }
 
     return null;
+  }
+
+  /**
+   * Find NFL team in ESPN teams list
+   */
+  findNFLTeamInESPN(teams, teamName) {
+    const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
+
+    // Common abbreviations
+    const abbrevMap = {
+      'kc': 'kansascity',
+      'sf': 'sanfrancisco',
+      'la': 'losangeles',
+      'ne': 'newengland',
+      'no': 'neworleans',
+      'tb': 'tampabay',
+      'gb': 'greenbay'
+    };
+
+    const parts = teamName.split(' ');
+    let searchTerms = [normalized];
+
+    if (parts.length > 1) {
+      const firstPart = parts[0].toLowerCase().replace(/[^a-z]/g, '');
+      const secondPart = parts.slice(1).join('').toLowerCase().replace(/[^a-z]/g, '');
+
+      if (abbrevMap[firstPart]) {
+        searchTerms.push(abbrevMap[firstPart] + secondPart);
+      }
+      searchTerms.push(secondPart);
+    }
+
+    for (const teamWrapper of teams) {
+      if (!teamWrapper || !teamWrapper.team) continue;
+      const team = teamWrapper.team;
+
+      const displayName = team.displayName.toLowerCase().replace(/[^a-z]/g, '');
+
+      for (const term of searchTerms) {
+        if (displayName.includes(term) || term.includes(displayName)) {
+          return { id: team.id, name: team.displayName };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get NFL team current season record from ESPN API
+   */
+  async getNFLTeamRecord(teamId) {
+    try {
+      const response = await axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}`, {
+        timeout: 10000
+      });
+
+      if (!response.data || !response.data.team) {
+        return null;
+      }
+
+      const team = response.data.team;
+      const recordItem = team.record?.items?.find(item => item.type === 'total');
+
+      if (!recordItem || !recordItem.summary) {
+        logger.warn('No record found for NFL team', { teamId, teamName: team.displayName });
+        return null;
+      }
+
+      // Parse "11-6" format
+      const [wins, losses] = recordItem.summary.split('-').map(n => parseInt(n));
+
+      return {
+        wins: wins || 0,
+        losses: losses || 0,
+        position: this.estimateRankFromWinRate(wins / (wins + losses))
+      };
+
+    } catch (error) {
+      logger.error('Error fetching NFL team record from ESPN', { teamId, error: error.message });
+      return null;
+    }
   }
 
   /**
