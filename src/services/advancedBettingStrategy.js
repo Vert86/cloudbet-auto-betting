@@ -515,7 +515,15 @@ class AdvancedBettingStrategy {
       asymmetries
     );
 
-    if (!edgeData || edgeData.edge < config.riskManagement.minEdgePercentage) {
+    // Skip edge check if fundamental analysis approved the bet
+    if (opportunity.fundamentalPrediction) {
+      logger.info('📊 Using fundamental analysis instead of edge calculation', {
+        predictionConfidence: (opportunity.fundamentalPrediction.confidence * 100).toFixed(1) + '%',
+        marketEdge: edgeData?.edge?.toFixed(2) + '%',
+        reasoning: 'Fundamental analysis takes priority over market odds'
+      });
+      // Continue to bet sizing without edge requirement
+    } else if (!edgeData || edgeData.edge < config.riskManagement.minEdgePercentage) {
       logger.info('Edge below minimum threshold', {
         edge: edgeData?.edge,
         threshold: config.riskManagement.minEdgePercentage,
