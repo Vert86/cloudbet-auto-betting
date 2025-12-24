@@ -531,16 +531,31 @@ class AdvancedBettingStrategy {
       return null;
     }
 
-    // STEP 6: Calculate Optimal Stake (Kelly)
-    const stake = this.calculateOptimalStake(
-      bankroll,
-      opportunity.cloudbetOdds,
-      edgeData.trueProbability,
-      edgeData.edge
-    );
+    // STEP 6: Calculate Optimal Stake
+    let stake;
 
-    if (stake === 0) {
-      return null;
+    if (opportunity.fundamentalPrediction) {
+      // Use fixed stake for fundamental analysis bets
+      const fixedStakePercent = parseFloat(process.env.BANKROLL_PERCENTAGE_PER_BET) || 1.0;
+      stake = bankroll * (fixedStakePercent / 100);
+      logger.info('💰 Using fixed stake for fundamental analysis bet', {
+        stake: stake.toFixed(2),
+        percentage: fixedStakePercent + '%',
+        bankroll: bankroll.toFixed(2),
+        reasoning: 'Fixed stake used instead of Kelly when fundamental analysis active'
+      });
+    } else {
+      // Use Kelly criterion for edge-based bets
+      stake = this.calculateOptimalStake(
+        bankroll,
+        opportunity.cloudbetOdds,
+        edgeData.trueProbability,
+        edgeData.edge
+      );
+
+      if (stake === 0) {
+        return null;
+      }
     }
 
     // Check exposure limit

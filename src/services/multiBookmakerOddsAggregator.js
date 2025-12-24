@@ -25,7 +25,7 @@ class MultiBookmakerOddsAggregator {
     this.sharpBookmakers = ['pinnacle', 'bookmaker', 'betcris', 'circa'];
 
     // Minimum bookmakers required for reliable edge detection
-    this.minBookmakers = parseInt(process.env.MIN_BOOKMAKERS) || 4;
+    this.minBookmakers = parseInt(process.env.MIN_BOOKMAKERS) || 2;
 
     // Cache for reducing API calls
     this.oddsCache = new Map();
@@ -177,19 +177,42 @@ class MultiBookmakerOddsAggregator {
   }
 
   /**
-   * Fuzzy match team names (handles abbreviations, etc.)
+   * Fuzzy match team names (handles abbreviations, city names, etc.)
    */
   fuzzyMatch(name1, name2) {
-    // Extract last word (team name without city)
-    const getLastWord = (str) => {
-      const words = str.split(/\s+/);
-      return words[words.length - 1];
+    if (!name1 || !name2) return false;
+
+    // Normalize: lowercase, remove common words
+    const normalize = (str) => {
+      return str.toLowerCase()
+        .replace(/\b(fc|afc|cf|cd|sc|united|city|town|athletic|Real|FK|PFK|RFK)\b/gi, '')
+        .replace(/[^a-z0-9\s]/g, '')
+        .trim();
     };
 
-    const last1 = getLastWord(name1);
-    const last2 = getLastWord(name2);
+    const norm1 = normalize(name1);
+    const norm2 = normalize(name2);
 
-    return last1 === last2;
+    // Exact match after normalization
+    if (norm1 === norm2) return true;
+
+    // Split into words
+    const words1 = norm1.split(/\s+/).filter(w => w.length > 2);
+    const words2 = norm2.split(/\s+/).filter(w => w.length > 2);
+
+    // If any significant word matches, consider it a match
+    // This handles "Lakers" vs "Los Angeles Lakers"
+    const commonWords = words1.filter(w => words2.includes(w));
+    if (commonWords.length > 0) return true;
+
+    // Check if one name contains the other
+    if (norm1.includes(norm2) || norm2.includes(norm1)) return true;
+
+    // Last resort: check last word only (team nickname)
+    const last1 = words1[words1.length - 1];
+    const last2 = words2[words2.length - 1];
+
+    return last1 && last2 && last1 === last2;
   }
 
   /**
@@ -295,9 +318,37 @@ class MultiBookmakerOddsAggregator {
 
       // Process markets
       const cbMarkets = cbEvent.markets || {};
+
+      // DEBUG: Log what markets CloudBet actually has
+      const marketKeys = Object.keys(cbMarkets);
+      if (marketKeys.length > 0) {
+        logger.debug('CloudBet markets for event', {
+          event: `${cbEvent.home} vs ${cbEvent.away}`,
+          marketKeys: marketKeys.slice(0, 5), // Show first 5
+          totalMarkets: marketKeys.length
+        });
+      }
+
       for (const [marketKey, marketData] of Object.entries(cbMarkets)) {
-        // Only process main markets
-        if (!marketKey.includes('match_odds') && !marketKey.includes('moneyline')) {
+        // ✅ ONLY ALLOW STANDARD MATCH ODDS (full match winner)
+        // CloudBet uses format like "soccer.match_odds" or "basketball.moneyline"
+        // Extract the market type after the sport prefix
+        const marketType = marketKey.includes('.') ? marketKey.split('.').pop() : marketKey;
+
+        // Skip all markets except standard match winner
+        if (marketType !== 'match_odds' && marketType !== 'moneyline') {
+          logger.debug('Skipping non-match-odds market', { marketKey, marketType });
+          continue;
+        }
+
+        // ❌ EXCLUDE HALF-TIME MARKETS - These are too volatile and unpredictable
+        if (marketKey.includes('first_half') ||
+            marketKey.includes('second_half') ||
+            marketKey.includes('period_first') ||
+            marketKey.includes('period_second') ||
+            marketKey.includes('1st_half') ||
+            marketKey.includes('2nd_half')) {
+          logger.debug('Skipping half-time market', { marketKey });
           continue;
         }
 
@@ -316,11 +367,22 @@ class MultiBookmakerOddsAggregator {
             // Get all bookmaker odds for this side
             const allBookmakerOdds = this.extractBookmakerOdds(oddsApiEvent, side);
 
-            if (allBookmakerOdds.length < this.minBookmakers) {
-              logger.info('Insufficient bookmakers for comparison', {
+            // DEBUG: Count how many bookmakers actually have odds for this side
+            const bookmakersWithOddsForSide = allBookmakerOdds.filter(b => b.odds[side] !== undefined);
+
+            logger.debug('Bookmaker odds extraction', {
+              event: `${cbEvent.home} vs ${cbEvent.away}`,
+              side,
+              totalBookmakers: allBookmakerOdds.length,
+              withOddsForSide: bookmakersWithOddsForSide.length,
+              required: this.minBookmakers,
+            });
+
+            if (bookmakersWithOddsForSide.length < this.minBookmakers) {
+              logger.info('Insufficient bookmakers with odds for this side', {
                 event: `${cbEvent.home} vs ${cbEvent.away}`,
                 side,
-                bookmakers: allBookmakerOdds.length,
+                bookmakersWithOdds: bookmakersWithOddsForSide.length,
                 required: this.minBookmakers,
               });
               continue;
@@ -347,12 +409,12 @@ class MultiBookmakerOddsAggregator {
               // Cloudbet odds
               cloudbetOdds: cloudbetOdds,
 
-              // Multi-bookmaker comparison data
-              allBookmakerOdds: allBookmakerOdds,
+              // Multi-bookmaker comparison data (FIXED: only bookmakers with odds for this side)
+              allBookmakerOdds: bookmakersWithOddsForSide,
 
               // Count sharp books
-              sharpBookCount: allBookmakerOdds.filter(b => b.isSharp).length,
-              totalBookmakers: allBookmakerOdds.length,
+              sharpBookCount: bookmakersWithOddsForSide.filter(b => b.isSharp).length,
+              totalBookmakers: bookmakersWithOddsForSide.length,
             };
 
             opportunities.push(opportunity);
@@ -361,9 +423,18 @@ class MultiBookmakerOddsAggregator {
       }
     }
 
-    logger.info('Opportunities found', {
+    // Sort opportunities by start time (nearest events first)
+    opportunities.sort((a, b) => {
+      const timeA = new Date(a.starts || a.cutoffTime);
+      const timeB = new Date(b.starts || b.cutoffTime);
+      return timeA - timeB;
+    });
+
+    logger.info('Opportunities found and sorted by start time', {
       sportKey,
       count: opportunities.length,
+      firstEventTime: opportunities.length > 0 ? opportunities[0].starts : null,
+      lastEventTime: opportunities.length > 0 ? opportunities[opportunities.length - 1].starts : null,
     });
 
     return opportunities;

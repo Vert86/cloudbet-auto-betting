@@ -1,0 +1,1883 @@
+
+================================================================================
+PRODUCTION BOT DRY RUN - NO BETS WILL BE PLACED
+================================================================================
+
+Configuration:
+  Sports: ice-hockey, basketball, american-football, soccer
+  Max bets per day: 10
+
+Fetching account balance...
+2025-12-10 10:31:10 [[32minfo[39m]: Retrieved account balance {
+  "service": "cloudbet-auto-betting",
+  "currency": "USDT",
+  "balance": {
+    "amount": "110.96415"
+  }
+}
+✅ Bankroll: 110.96415 USDT
+
+Scanning all sports for opportunities...
+
+📊 Scanning ice-hockey...
+2025-12-10 10:31:10 [[32minfo[39m]: Finding opportunities with multi-bookmaker data {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "ice-hockey"
+}
+2025-12-10 10:31:10 [[32minfo[39m]: Fetching odds from Cloudbet {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "ice-hockey"
+}
+2025-12-10 10:31:10 [[32minfo[39m]: Fetching events from 10 top competitions for ice-hockey {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:11 [[32minfo[39m]:   NHL: 4 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:11 [[32minfo[39m]:   MHL: 11 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:12 [[32minfo[39m]:   VHL: 10 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:12 [[32minfo[39m]:   KHL: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:12 [[32minfo[39m]:   Liiga: 6 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:13 [[32minfo[39m]:   1. Liga: 7 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:13 [[32minfo[39m]:   AHL: 10 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:13 [[32minfo[39m]:   SHL: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:14 [[32minfo[39m]:   Extraliga: 5 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:14 [[32minfo[39m]:   ICE Hockey League: 1 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:14 [[32minfo[39m]: Retrieved 54 total events for sport ice-hockey {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:14 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "icehockey_nhl"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "icehockey_nhl",
+  "used": "495",
+  "remaining": "19505.0"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "icehockey_sweden_hockey_league"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "icehockey_sweden_hockey_league",
+  "used": "495",
+  "remaining": "19505.0"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Processing events for opportunities {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvents": 54,
+  "oddsApiEvents": 14
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "CHI Blackhawks vs NY Rangers",
+  "oddsApiEvent": "Chicago Blackhawks vs New York Rangers"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "CGY Flames vs DET Red Wings",
+  "oddsApiEvent": "Calgary Flames vs Detroit Red Wings"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "UTA Hockey Club vs FLA Panthers"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Seattle Kraken vs LA Kings",
+  "oddsApiEvent": "Seattle Kraken vs Los Angeles Kings"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Amurskie Tigry Khabarovsk vs SKA-Kareliya Kondopoga U20"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Taifun vs SKA-Varyagi"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Krasnoyarskie Rysi vs Tyumenskiy Legion"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Avto Yekaterinburg vs Dinamo Shinnik Bobruysk U20"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Chaika Nizhny Novgorod vs JHC Spartak Moskow"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Loko-76 Yaroslavl vs Akm-Junior Novomoskovsk U20"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "MHC Dynamo Moscow vs Krasnaya Armiya"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Reaktor Nizhnekamsk vs Kuznetskie Medvedi"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Sputnik Almetievsk vs Omskie Yastreby"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Akm-Junior Novomoskovsk vs JHC Spartak Mah U20"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Krylya Sovetov Moscow vs Kapitan Stupino"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Norilsk vs Ska-Neva Saint Petersburg"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Magnitka Magnitogorsk vs Yuzhny Ural Orsk"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Tambov vs HK Chelny"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Rostov vs Neftyanik Almetyevsk"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Sokol Krasnoyarsk vs HK Dinamo St. Petersburg"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Zauralye Kurgan vs Kristall Saratov"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Yugra Khanty-Mansiysk vs HK Ryazan"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Rubin Tyumen vs Dizel Penza"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Khimik Voskresensk vs HK Molot"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HK TORPEDO GORKII vs Olimpiya Kirovo-Chepetsk"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HIFK Helsinki vs Tappara Tampere"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Kiekko-Espoo vs HPK Hameenlinna"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "KooKoo vs KalPa Hockey"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Lukko Rauma vs Karpat Oulu"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "TPS Turku vs Jukurit Mikkeli"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Vaasan Sport vs Pelicans Lahti"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC RT Torax Poruba vs HC Zubr Prerov"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Frydek Mistek vs HC Slavia Prague"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Dukla Jihlava vs HC Stadion Litomerice"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Vhk Vsetin vs HC Chomutov"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Banik Sokolov vs Horacka Trebic"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HC Pardubice vs PSG Berani Zlin"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SC Kolin vs Hockey Club Tabor"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ontario Reign vs Texas Stars"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Belleville Senators vs Rochester Americans"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Grand Rapids Griffins vs Milwaukee Admirals"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Hartford Wolf Pack vs Wilkes-Barre/Scranton Penguins"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Hershey Bears vs Providence Bruins"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Laval Rocket vs Toronto Marlies"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Utica Comets vs Syracuse Crunch"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Iowa Wild vs Rockford Icehogs"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Bakersfield Condors vs Henderson Silver Knights"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "San Jose Barracuda vs San Diego Gulls"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Dukla Michalovce vs HC Kosice"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HK Vlci Zilina vs HK Nitra"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HK Dukla Trencin vs Slovan Bratislava"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HK Poprad vs HC 21 Presov"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Mhk 32 Liptovsky Mikulas vs Spisska Nova Ves"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "EC Villacher SV vs Red Bull Salzburg"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Opportunities found and sorted by start time {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "ice-hockey",
+  "count": 0,
+  "firstEventTime": null,
+  "lastEventTime": null
+}
+   Found 0 opportunities
+
+📊 Scanning basketball...
+2025-12-10 10:31:15 [[32minfo[39m]: Finding opportunities with multi-bookmaker data {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Fetching odds from Cloudbet {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball"
+}
+2025-12-10 10:31:15 [[32minfo[39m]: Fetching events from 10 top competitions for basketball {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:16 [[32minfo[39m]:   NCAAM: 28 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:16 [[32minfo[39m]:   Euroleague: 5 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:17 [[32minfo[39m]:   NBA: 2 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:17 [[32minfo[39m]:   B.League: 13 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:17 [[32minfo[39m]:   Segunda FEB: 13 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:18 [[32minfo[39m]:   NBL: 2 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:18 [[32minfo[39m]:   Europe Cup: 8 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:18 [[32minfo[39m]:   Pro A: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:19 [[32minfo[39m]:   B2.League: 7 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:19 [[32minfo[39m]:   Eurocup: 6 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:19 [[32minfo[39m]: Retrieved 84 total events for sport basketball {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:19 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_nba"
+}
+2025-12-10 10:31:19 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_nba",
+  "used": "498",
+  "remaining": "19502.0"
+}
+2025-12-10 10:31:19 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_ncaab"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_ncaab",
+  "used": "501",
+  "remaining": "19499.0"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_euroleague"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball_euroleague",
+  "used": "504",
+  "remaining": "19496.0"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Processing events for opportunities {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvents": 84,
+  "oddsApiEvents": 51
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Fort Lewis Skyhawks vs New Mexico Highlands Cowboys"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "San Jose State vs Long Beach State",
+  "oddsApiEvent": "San José St Spartans vs Long Beach St 49ers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Baylor vs Norfolk State",
+  "oddsApiEvent": "Baylor Bears vs Norfolk St Spartans"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Princeton Tigers vs Merrimack",
+  "oddsApiEvent": "Princeton Tigers vs Merrimack Warriors"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "UNC Asheville Bulldogs vs Miami (OH)",
+  "oddsApiEvent": "UNC Asheville Bulldogs vs Miami (OH) RedHawks"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Fordham vs Fairleigh Dickinson Knights",
+  "oddsApiEvent": "Fordham Rams vs Fairleigh Dickinson Knights"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "George Washington vs Delaware"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Iona vs Bryant",
+  "oddsApiEvent": "Iona Gaels vs Bryant Bulldogs"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Marshall vs Western Kentucky",
+  "oddsApiEvent": "Marshall Thundering Herd vs Western Kentucky Hilltoppers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Massachusetts vs Boston College",
+  "oddsApiEvent": "Massachusetts Minutemen vs Boston College Eagles"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "NC State vs Liberty",
+  "oddsApiEvent": "NC State Wolfpack vs Liberty Flames"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Notre Dame vs Idaho",
+  "oddsApiEvent": "Notre Dame Fighting Irish vs Idaho Vandals"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Purdue vs Minnesota Golden Gophers",
+  "oddsApiEvent": "Purdue Boilermakers vs Minnesota Golden Gophers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "South Florida vs College of Charleston Cougars",
+  "oddsApiEvent": "South Florida Bulls vs Charleston Cougars"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "St. Bonaventure vs Colgate",
+  "oddsApiEvent": "St. Bonaventure Bonnies vs Colgate Raiders"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "VCU vs New Mexico",
+  "oddsApiEvent": "VCU Rams vs New Mexico Lobos"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Eastern Illinois Panthers vs Eastern Kentucky",
+  "oddsApiEvent": "Eastern Illinois Panthers vs Eastern Kentucky Colonels"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Houston vs Jackson State Tigers",
+  "oddsApiEvent": "Houston Cougars vs Jackson St Tigers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "IPFW vs Eastern Michigan"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Kansas City Roos vs Weber State Wildcats"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Southern Illinois vs UT Martin Skyhawks",
+  "oddsApiEvent": "Southern Illinois Salukis vs Tenn-Martin Skyhawks"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Tulsa vs Arkansas-Pine Bluff",
+  "oddsApiEvent": "Tulsa Golden Hurricane vs Arkansas-Pine Bluff Golden Lions"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Utah Valley vs Idaho State",
+  "oddsApiEvent": "Utah Valley Wolverines vs Idaho State Bengals"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Texas State vs Southern University",
+  "oddsApiEvent": "Texas State Bobcats vs Southern Jaguars"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Boise State vs Duquesne",
+  "oddsApiEvent": "Boise State Broncos vs Duquesne Dukes"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Nebraska vs Wisconsin",
+  "oddsApiEvent": "Nebraska Cornhuskers vs Wisconsin Badgers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Cal State Northridge vs Fresno State",
+  "oddsApiEvent": "CSU Northridge Matadors vs Fresno St Bulldogs"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "San Diego State (w) vs Lamar",
+  "oddsApiEvent": "San Diego St Aztecs vs Lamar Cardinals"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Maccabi Tel-Aviv vs ASVEL Lyon Villeurbanne",
+  "oddsApiEvent": "Maccabi Tel Aviv vs ASVEL Lyon Villeurbanne"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Olimpia Milano vs Panathinaikos BC",
+  "oddsApiEvent": "Pallacanestro Olimpia Milano vs Panathinaikos"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Valencia Basket vs Anadolu Efes SK",
+  "oddsApiEvent": "Valencia Basket vs Anadolu Efes"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Paris Basketball vs BC Zalgiris Kaunas",
+  "oddsApiEvent": "Paris Basketball vs Žalgiris"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Real Madrid vs Baskonia Vitoria-Gasteiz",
+  "oddsApiEvent": "Real Madrid vs Saski Baskonia"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "OKC Thunder vs PHX Suns",
+  "oddsApiEvent": "Oklahoma City Thunder vs Phoenix Suns"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "LA Lakers vs SA Spurs",
+  "oddsApiEvent": "Los Angeles Lakers vs San Antonio Spurs"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Akita Northern Happinets vs Sendai 89Ers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Altiri Chiba vs Levanga Hokkaido"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Alvark Tokyo vs Yokohama B-Corsairs"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Chiba Jets Funabashi vs Kawasaki Brave Thunders"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Fighting Eagles Nagoya vs Toyama Grouses"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Gunma Crane Thunders vs Sun Rockers Shibuya"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Hiroshima Dragonflies vs Nagasaki Velca"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Koshigaya Alphas vs Ibaraki Robots"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Kyoto Hannaryz vs Shimane Susanoo Magic"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Osaka Evessa vs Utsunomiya Brex"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "San-En Neophoenix vs Shiga Lakestars"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Seahorses Mikawa vs Saga Ballooners"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ryukyu Golden Kings Okinawa vs Nagoya Diamond Dolphins"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Albacete Basket vs Cb Getafe"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Basquet Sant Antoni vs AB Castello"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "CEB Lliria vs Molina Basket"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Caja 87 Baloncesto vs Jaen FS"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Cb Benicarlo vs Upb Gandia"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Cb Toledo vs Gijon Baloncesto"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Cultural Y Deportiva Leonesa vs LogroBasket"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "UE Mataro vs Cb Salou"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "CB Peñas Huesca vs Basket Zaragoza 2002"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Cb Ciudad de Ponferrada vs Iraurgi Saski Baloia"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Caceres Ciudad del Baloncesto vs CB Clavijo"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Club Baloncesto Valle de Egues vs Cb Moron"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Coto Cordoba vs Cbc Valladolid"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SE Melbourne Phoenix vs Tasmania Jackjumpers"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Illawarra Hawks vs Brisbane Bullets"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "CSM CSU Oradea vs KK Bosna Royal Sarajevo"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Bilbao Basket vs Sporting Cp U23"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Rostock Seawolves vs Trefl Sopot"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "PAOK Thessaloniki BC vs BC Prievidza"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Basket Zaragoza 2002 vs Peristeri Athens"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Kk Cedevita Zagreb Junior vs Pallacanestro Reggiana"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Dinamo Sassari vs Petkim Spor Aliaga"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "UCAM Murcia vs Falco KC Szombathely"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Bambitious Nara vs Veltex Shizuoka"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ehime Orange Vikings vs Rizing Zephyr Fukuoka"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Fukushima Firebonds vs Aomori Wats"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Iwate Big Bulls vs Yokohama Excellence"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Kumamoto Volters vs Yamagata Wyverns"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Nishinomiya Storks vs Kagoshima Rebnise"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Shinshu Brave Warriors vs Fukui Blowwinds"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Bahcesehir Koleji vs CS Universitatea Cluj-Napoca II"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "BC Neptunas Klaipeda (w) vs Slask Wroclaw"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "BC Aris Thessaloniki vs Reyer Venezia"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "KK Buducnost Voli vs London Lions"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ulm Basketball vs Turk Telekom"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Basquet Manresa vs KK Cedevita Olimpija Ljubljana"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Opportunities found and sorted by start time {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "basketball",
+  "count": 0,
+  "firstEventTime": null,
+  "lastEventTime": null
+}
+   Found 0 opportunities
+
+📊 Scanning american-football...
+2025-12-10 10:31:20 [[32minfo[39m]: Finding opportunities with multi-bookmaker data {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "american-football"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Fetching odds from Cloudbet {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "american-football"
+}
+2025-12-10 10:31:20 [[32minfo[39m]: Fetching events from 4 top competitions for american-football {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:21 [[32minfo[39m]:   NFL: 16 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:21 [[32minfo[39m]:   NCAAF: 38 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:21 [[32minfo[39m]:   CFL: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:22 [[32minfo[39m]:   NFL Draft: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Retrieved 54 total events for sport american-football {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "americanfootball_nfl"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "americanfootball_nfl",
+  "used": "507",
+  "remaining": "19493.0"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "americanfootball_ncaaf"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "americanfootball_ncaaf",
+  "used": "510",
+  "remaining": "19490.0"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Processing events for opportunities {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvents": 54,
+  "oddsApiEvents": 80
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "TB Buccaneers vs ATL Falcons",
+  "oddsApiEvent": "Tampa Bay Buccaneers vs Atlanta Falcons"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "CHI Bears vs CLE Browns",
+  "oddsApiEvent": "Chicago Bears vs Cleveland Browns"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "CIN Bengals vs BAL Ravens",
+  "oddsApiEvent": "Cincinnati Bengals vs Baltimore Ravens"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "HOU Texans vs ARZ Cardinals",
+  "oddsApiEvent": "Houston Texans vs Arizona Cardinals"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "JAX Jaguars vs NY Jets",
+  "oddsApiEvent": "Jacksonville Jaguars vs New York Jets"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "KC Chiefs vs LA Chargers",
+  "oddsApiEvent": "Kansas City Chiefs vs Los Angeles Chargers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "NE Patriots vs BUF Bills",
+  "oddsApiEvent": "New England Patriots vs Buffalo Bills"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "NY Giants vs WAS Commanders",
+  "oddsApiEvent": "New York Giants vs Washington Commanders"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "PHI Eagles vs LV Raiders",
+  "oddsApiEvent": "Philadelphia Eagles vs Las Vegas Raiders"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "DEN Broncos vs GB Packers",
+  "oddsApiEvent": "Denver Broncos vs Green Bay Packers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "LA Rams vs DET Lions",
+  "oddsApiEvent": "Los Angeles Rams vs Detroit Lions"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "NO Saints vs CAR Panthers",
+  "oddsApiEvent": "New Orleans Saints vs Carolina Panthers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "SEA Seahawks vs IND Colts",
+  "oddsApiEvent": "Seattle Seahawks vs Indianapolis Colts"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "SF 49ers vs TEN Titans",
+  "oddsApiEvent": "San Francisco 49ers vs Tennessee Titans"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "DAL Cowboys vs MIN Vikings",
+  "oddsApiEvent": "Dallas Cowboys vs Minnesota Vikings"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "PIT Steelers vs MIA Dolphins",
+  "oddsApiEvent": "Pittsburgh Steelers vs Miami Dolphins"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Navy vs Army",
+  "oddsApiEvent": "Navy Midshipmen vs Army Black Knights"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Washington vs Boise State",
+  "oddsApiEvent": "Washington Huskies vs Boise State Broncos"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Jacksonville State vs Troy",
+  "oddsApiEvent": "Jacksonville State Gamecocks vs Troy Trojans"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "South Florida vs Old Dominion",
+  "oddsApiEvent": "South Florida Bulls vs Old Dominion Monarchs"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Delaware vs Louisiana-Lafayette"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Arkansas State vs Missouri State",
+  "oddsApiEvent": "Arkansas State Red Wolves vs Missouri State Bears"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Western Michigan vs Kennesaw State",
+  "oddsApiEvent": "Western Michigan Broncos vs Kennesaw State Owls"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "NC State vs Memphis",
+  "oddsApiEvent": "NC State Wolfpack vs Memphis Tigers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Oregon vs James Madison"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Oklahoma vs Alabama",
+  "oddsApiEvent": "Oklahoma Sooners vs Alabama Crimson Tide"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Texas A&M vs Miami (FL)",
+  "oddsApiEvent": "Texas A&M Aggies vs Miami Hurricanes"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Ole Miss vs Tulane",
+  "oddsApiEvent": "Ole Miss Rebels vs Tulane Green Wave"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Utah State vs Washington State",
+  "oddsApiEvent": "Utah State Aggies vs Washington State Cougars"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Louisville vs Toledo",
+  "oddsApiEvent": "Louisville Cardinals vs Toledo Rockets"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Southern Miss vs Western Kentucky",
+  "oddsApiEvent": "Southern Mississippi Golden Eagles vs Western Kentucky Hilltoppers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Ohio vs UNLV",
+  "oddsApiEvent": "Ohio Bobcats vs UNLV Rebels"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Hawaii vs California",
+  "oddsApiEvent": "Hawaii Rainbow Warriors vs California Golden Bears"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Northwestern vs Central Michigan",
+  "oddsApiEvent": "Northwestern Wildcats vs Central Michigan Chippewas"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Minnesota vs New Mexico",
+  "oddsApiEvent": "Minnesota Golden Gophers vs New Mexico Lobos"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "UTSA vs Florida International",
+  "oddsApiEvent": "UTSA Roadrunners vs Florida International Panthers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "East Carolina vs Pittsburgh",
+  "oddsApiEvent": "East Carolina Pirates vs Pittsburgh Panthers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Clemson vs Penn State",
+  "oddsApiEvent": "Clemson Tigers vs Penn State Nittany Lions"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "BYU vs Georgia Tech",
+  "oddsApiEvent": "BYU Cougars vs Georgia Tech Yellow Jackets"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Fresno State vs Miami Ohio",
+  "oddsApiEvent": "Fresno State Bulldogs vs Miami (OH) RedHawks"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "San Diego State vs North Texas",
+  "oddsApiEvent": "San Diego State Aztecs vs North Texas Mean Green"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Missouri vs Virginia",
+  "oddsApiEvent": "Missouri Tigers vs Virginia Cavaliers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "HOU Texans vs LSU"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Appalachian State vs Georgia Southern",
+  "oddsApiEvent": "Appalachian State Mountaineers vs Georgia Southern Eagles"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Louisiana Tech vs Coastal Carolina",
+  "oddsApiEvent": "Louisiana Tech Bulldogs vs Coastal Carolina Chanticleers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Illinois vs Tennessee",
+  "oddsApiEvent": "Illinois Fighting Illini vs Tennessee Volunteers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "TCU vs USC",
+  "oddsApiEvent": "TCU Horned Frogs vs USC Trojans"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Vanderbilt vs Iowa",
+  "oddsApiEvent": "Vanderbilt Commodores vs Iowa Hawkeyes"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Duke vs Arizona State",
+  "oddsApiEvent": "Duke Blue Devils vs Arizona State Sun Devils"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Texas vs Michigan",
+  "oddsApiEvent": "Texas Longhorns vs Michigan Wolverines"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Utah vs Nebraska",
+  "oddsApiEvent": "Utah Utes vs Nebraska Cornhuskers"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Texas State vs Rice",
+  "oddsApiEvent": "Texas State Bobcats vs Rice Owls"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Mississippi State vs Wake Forest",
+  "oddsApiEvent": "Mississippi State Bulldogs vs Wake Forest Demon Deacons"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "SMU vs Arizona",
+  "oddsApiEvent": "SMU Mustangs vs Arizona Wildcats"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Opportunities found and sorted by start time {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "american-football",
+  "count": 0,
+  "firstEventTime": null,
+  "lastEventTime": null
+}
+   Found 0 opportunities
+
+📊 Scanning soccer...
+2025-12-10 10:31:22 [[32minfo[39m]: Finding opportunities with multi-bookmaker data {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Fetching odds from Cloudbet {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer"
+}
+2025-12-10 10:31:22 [[32minfo[39m]: Fetching events from 10 top competitions for soccer {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:23 [[32minfo[39m]:   FIFA World Cup: 2 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:24 [[32minfo[39m]:   Premier League: 20 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:24 [[32minfo[39m]:   Africa Cup of Nations: 0 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:24 [[32minfo[39m]:   La Liga: 20 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:25 [[32minfo[39m]:   Bundesliga: 18 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:25 [[32minfo[39m]:   FIFA World Cup Qualifiers: 21 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:26 [[32minfo[39m]:   UEFA Europa League: 18 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:26 [[32minfo[39m]:   Serie A: 16 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:27 [[32minfo[39m]:   Primera Federacion: 12 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:27 [[32minfo[39m]:   UEFA Youth League: 17 trading events {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Retrieved 144 total events for sport soccer {
+  "service": "cloudbet-auto-betting"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_epl"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_epl",
+  "used": "513",
+  "remaining": "19487.0"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_spain_la_liga"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_spain_la_liga",
+  "used": "516",
+  "remaining": "19484.0"
+}
+2025-12-10 10:31:27 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_germany_bundesliga"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_germany_bundesliga",
+  "used": "519",
+  "remaining": "19481.0"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_italy_serie_a"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_italy_serie_a",
+  "used": "522",
+  "remaining": "19478.0"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_france_ligue_one"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_france_ligue_one",
+  "used": "525",
+  "remaining": "19475.0"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Fetching odds from The Odds API {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_fifa_world_cup_qualifiers_europe"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Odds API quota {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer_fifa_world_cup_qualifiers_europe",
+  "used": "528",
+  "remaining": "19472.0"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Processing events for opportunities {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvents": 144,
+  "oddsApiEvents": 100
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Mexico vs South Africa"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "USA vs Paraguay"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Chelsea vs Everton",
+  "oddsApiEvent": "Chelsea vs Everton"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Liverpool vs Brighton & Hove Albion",
+  "oddsApiEvent": "Liverpool vs Brighton and Hove Albion"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Burnley vs Fulham",
+  "oddsApiEvent": "Burnley vs Fulham"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Arsenal vs Wolverhampton",
+  "oddsApiEvent": "Arsenal vs Wolverhampton Wanderers"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Crystal Palace vs Manchester City",
+  "oddsApiEvent": "Crystal Palace vs Manchester City"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Nottingham Forest vs Tottenham Hotspur",
+  "oddsApiEvent": "Nottingham Forest vs Tottenham Hotspur"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Sunderland AFC vs Newcastle United",
+  "oddsApiEvent": "Sunderland vs Newcastle United"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "West Ham United vs Aston Villa",
+  "oddsApiEvent": "West Ham United vs Aston Villa"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Brentford vs Leeds United",
+  "oddsApiEvent": "Brentford vs Leeds United"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Manchester United vs AFC Bournemouth",
+  "oddsApiEvent": "Manchester United vs Bournemouth"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Newcastle United vs Chelsea",
+  "oddsApiEvent": "Newcastle United vs Chelsea"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "AFC Bournemouth vs Burnley",
+  "oddsApiEvent": "Bournemouth vs Burnley"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Brighton & Hove Albion vs Sunderland AFC",
+  "oddsApiEvent": "Brighton and Hove Albion vs Sunderland"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Manchester City vs West Ham United",
+  "oddsApiEvent": "Manchester City vs West Ham United"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Wolverhampton vs Brentford",
+  "oddsApiEvent": "Wolverhampton Wanderers vs Brentford"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Tottenham Hotspur vs Liverpool",
+  "oddsApiEvent": "Tottenham Hotspur vs Liverpool"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Everton vs Arsenal",
+  "oddsApiEvent": "Everton vs Arsenal"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Leeds United vs Crystal Palace",
+  "oddsApiEvent": "Leeds United vs Crystal Palace"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Aston Villa vs Manchester United",
+  "oddsApiEvent": "Aston Villa vs Manchester United"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Fulham vs Nottingham Forest",
+  "oddsApiEvent": "Fulham vs Nottingham Forest"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Real Sociedad vs Girona",
+  "oddsApiEvent": "Real Sociedad vs Girona"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Atletico Madrid vs Valencia",
+  "oddsApiEvent": "Atlético Madrid vs Valencia"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Mallorca vs Elche CF",
+  "oddsApiEvent": "Mallorca vs Elche CF"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Barcelona vs Osasuna",
+  "oddsApiEvent": "Barcelona vs CA Osasuna"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Getafe vs Espanyol Barcelona",
+  "oddsApiEvent": "Getafe vs Espanyol"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Sevilla vs Real Oviedo",
+  "oddsApiEvent": "Sevilla vs Oviedo"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Celta Vigo vs Athletic Bilbao",
+  "oddsApiEvent": "Celta Vigo vs Athletic Bilbao"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Levante UD vs Villarreal CF",
+  "oddsApiEvent": "Levante vs Villarreal"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Deportivo Alaves vs Real Madrid"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Rayo Vallecano vs Real Betis",
+  "oddsApiEvent": "Rayo Vallecano vs Real Betis"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Valencia vs Mallorca",
+  "oddsApiEvent": "Valencia vs Mallorca"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Real Oviedo vs Celta Vigo",
+  "oddsApiEvent": "Oviedo vs Celta Vigo"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Levante UD vs Real Sociedad",
+  "oddsApiEvent": "Levante vs Real Sociedad"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Osasuna vs Deportivo Alaves"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Real Madrid vs Sevilla",
+  "oddsApiEvent": "Real Madrid vs Sevilla"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Girona vs Atletico Madrid",
+  "oddsApiEvent": "Girona vs Atlético Madrid"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Villarreal CF vs Barcelona",
+  "oddsApiEvent": "Villarreal vs Barcelona"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Elche CF vs Rayo Vallecano",
+  "oddsApiEvent": "Elche CF vs Rayo Vallecano"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Real Betis vs Getafe",
+  "oddsApiEvent": "Real Betis vs Getafe"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Athletic Bilbao vs Espanyol Barcelona",
+  "oddsApiEvent": "Athletic Bilbao vs Espanyol"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Union Berlin vs RB Leipzig",
+  "oddsApiEvent": "Union Berlin vs RB Leipzig"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Borussia Monchengladbach vs Wolfsburg",
+  "oddsApiEvent": "Borussia Monchengladbach vs VfL Wolfsburg"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Eintracht Frankfurt vs FC Augsburg",
+  "oddsApiEvent": "Eintracht Frankfurt vs Augsburg"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "FC St. Pauli vs FC Heidenheim 1846",
+  "oddsApiEvent": "FC St. Pauli vs 1. FC Heidenheim"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "TSG Hoffenheim vs Hamburger SV",
+  "oddsApiEvent": "TSG Hoffenheim vs Hamburger SV"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Bayer Leverkusen vs FC Koln"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Freiburg vs Borussia Dortmund",
+  "oddsApiEvent": "SC Freiburg vs Borussia Dortmund"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Bayern Munich vs FSV Mainz",
+  "oddsApiEvent": "Bayern Munich vs FSV Mainz 05"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Werder Bremen vs Stuttgart",
+  "oddsApiEvent": "Werder Bremen vs VfB Stuttgart"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Borussia Dortmund vs Borussia Monchengladbach",
+  "oddsApiEvent": "Borussia Dortmund vs Borussia Monchengladbach"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "FC Augsburg vs Werder Bremen",
+  "oddsApiEvent": "Augsburg vs Werder Bremen"
+}
+2025-12-10 10:31:28 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Koln vs Union Berlin"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Hamburger SV vs Eintracht Frankfurt",
+  "oddsApiEvent": "Hamburger SV vs Eintracht Frankfurt"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Stuttgart vs TSG Hoffenheim",
+  "oddsApiEvent": "VfB Stuttgart vs TSG Hoffenheim"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Wolfsburg vs Freiburg",
+  "oddsApiEvent": "VfL Wolfsburg vs SC Freiburg"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "RB Leipzig vs Bayer Leverkusen",
+  "oddsApiEvent": "RB Leipzig vs Bayer Leverkusen"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "FSV Mainz vs FC St. Pauli",
+  "oddsApiEvent": "FSV Mainz 05 vs FC St. Pauli"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "FC Heidenheim 1846 vs Bayern Munich",
+  "oddsApiEvent": "1. FC Heidenheim vs Bayern Munich"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Turkey vs Romania",
+  "oddsApiEvent": "Turkey vs Romania"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Denmark vs North Macedonia",
+  "oddsApiEvent": "Denmark vs North Macedonia"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Italy vs Northern Ireland",
+  "oddsApiEvent": "Italy vs Northern Ireland"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Poland vs Albania",
+  "oddsApiEvent": "Poland vs Albania"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Slovakia vs Kosovo",
+  "oddsApiEvent": "Slovakia vs Kosovo"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Ukraine vs Sweden",
+  "oddsApiEvent": "Ukraine vs Sweden"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Wales vs Bosnia & Herzegovina",
+  "oddsApiEvent": "Wales vs Bosnia & Herzegovina"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Qatar vs Switzerland"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Brazil vs Morocco"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Haiti vs Scotland"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Germany vs Curacao"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Netherlands vs Japan"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ivory Coast vs Ecuador"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Spain vs Cape Verde"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Belgium vs Egypt"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Saudi Arabia vs Uruguay"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Iran vs New Zealand"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "France vs Senegal"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "England vs Croatia"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ghana vs Panama"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Uzbekistan vs Colombia"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Midtjylland vs KRC Genk"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Utrecht vs Nottingham Forest"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ferencvarosi Budapest vs Rangers"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "GNK Dinamo Zagreb vs Real Betis"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Nice vs SC Braga"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "PFC Ludogorets 1945 Razgrad vs PAOK Thessaloniki"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SK Sturm Graz vs FK Crvena Zvezda"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Stuttgart vs Maccabi Tel Aviv FC"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Young Boys Bern vs Lille OSC"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Celta Vigo vs Bologna FC"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Celtic Glasgow vs AS Roma"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Basel 1893 vs Aston Villa"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Porto vs Malmo FF"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Fotbal Club FCSB vs Feyenoord Rotterdam"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Freiburg vs FC Salzburg"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Lyon vs Go Ahead Eagles"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Panathinaikos Athens vs FC Viktoria Plzen"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SK Brann vs Fenerbahce"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "US Lecce vs Pisa SC",
+  "oddsApiEvent": "Lecce vs Pisa"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Torino FC vs US Cremonese",
+  "oddsApiEvent": "Torino vs Cremonese"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Parma Calcio vs SS Lazio",
+  "oddsApiEvent": "Parma vs Lazio"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Atalanta BC vs Cagliari Calcio",
+  "oddsApiEvent": "Atalanta BC vs Cagliari"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "AC Milan vs Sassuolo Calcio",
+  "oddsApiEvent": "AC Milan vs Sassuolo"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "ACF Fiorentina vs Hellas Verona",
+  "oddsApiEvent": "Fiorentina vs Hellas Verona"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Udinese Calcio vs SSC Napoli",
+  "oddsApiEvent": "Udinese vs Napoli"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Genoa CFC vs Inter Milan",
+  "oddsApiEvent": "Genoa vs Inter Milan"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Bologna FC vs Juventus",
+  "oddsApiEvent": "Bologna vs Juventus"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "AS Roma vs Como 1907",
+  "oddsApiEvent": "AS Roma vs Como"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "SS Lazio vs US Cremonese",
+  "oddsApiEvent": "Lazio vs Cremonese"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Juventus vs AS Roma",
+  "oddsApiEvent": "Juventus vs AS Roma"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Cagliari Calcio vs Pisa SC",
+  "oddsApiEvent": "Cagliari vs Pisa"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Sassuolo Calcio vs Torino FC",
+  "oddsApiEvent": "Sassuolo vs Torino"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "ACF Fiorentina vs Udinese Calcio",
+  "oddsApiEvent": "Fiorentina vs Udinese"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Matched Cloudbet event to Odds API {
+  "service": "cloudbet-auto-betting",
+  "cloudbetEvent": "Genoa CFC vs Atalanta BC",
+  "oddsApiEvent": "Genoa vs Atalanta BC"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Marbella FC vs Atletico Madrid B"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Betis Deportivo Balompie vs AD Alcorcon"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "CP Cacereno SAD vs Zamora CF"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Real Madrid Castilla vs CD Guadalajara"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Club Deportivo Eldense vs SD Tarazona"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Osasuna B vs CD Lugo"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SD Ponferradina vs CD Arenteiro"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Ourense CF vs Barakaldo CF"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Real Aviles CF vs Tenerife CD"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Real Murcia CF vs CE Sabadell FC"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "CF Talavera de La Reina vs Merida AD"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Pontevedra CF vs Arenas Club Getxo"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Qarabağ Ağdam FK U19 vs AFC Ajax U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "SL Benfica U19 vs SSC Napoli U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Villarreal CF U19 vs FC Copenhagen U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "ATHLETIC BILBAO vs Paris Saint-Germain FC U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Midtjylland U19 vs 1. FC Köln U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "FC Midtjylland U19 vs FC Koln"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Club Brugge vs Arsenal FCPre U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Dinamo Tbilisi vs FC Dinamo Minsk U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Juventus Turin U20 vs Pafos FC U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Real Betis Youth vs FC Porto U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Real Madrid U19 vs Manchester City U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "MSK Zilina U19 vs FK Crvena Zvezda U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Puskas Akademia U19 vs SC Fotbal Club Fcsb U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Nantes vs Maccabi Haifa U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "KRC Genk vs HJK Helsinki U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Hibernian FC vs FC Dynamo Kiev U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: No match found for Cloudbet event {
+  "service": "cloudbet-auto-betting",
+  "event": "Hibernian U19 vs FC Dynamo Kiev U19"
+}
+2025-12-10 10:31:29 [[32minfo[39m]: Opportunities found and sorted by start time {
+  "service": "cloudbet-auto-betting",
+  "sportKey": "soccer",
+  "count": 0,
+  "firstEventTime": null,
+  "lastEventTime": null
+}
+   Found 0 opportunities
+
+================================================================================
+Total opportunities across all sports: 0
+================================================================================
+
+Sorting opportunities by start time (nearest first)...
+
+⚠️  No opportunities found
+

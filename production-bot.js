@@ -3,6 +3,7 @@ const multiBookmakerAggregator = require('./src/services/multiBookmakerOddsAggre
 const advancedBettingStrategy = require('./src/services/advancedBettingStrategy');
 const cloudbetAPI = require('./src/services/cloudbetAPI');
 const logger = require('./src/utils/logger');
+const telegramNotifier = require('./src/utils/telegramNotifier');
 const fs = require('fs');
 const path = require('path');
 
@@ -17,28 +18,81 @@ class ProductionBot {
     this.dailyProfit = 0;
     this.sessionStart = new Date();
     this.lastBetTime = null;
+    this.sessionBets = []; // Track bets placed this session
+    this.eventBetCounts = new Map(); // Track number of bets per event
 
     // Configuration
     this.scanInterval = 5 * 60 * 1000; // 5 minutes
     // Include sports with daily games for faster results
+    // NOTE: Soccer disabled - fundamental analysis not yet implemented
     this.sports = [
       'ice-hockey',     // NHL - games almost daily
       'basketball',     // NBA - games almost daily
-      'american-football', // NFL - weekend games
-      'soccer'          // Soccer - keep for coverage
+      'american-football' // NFL - weekend games
+      // 'soccer' - Disabled: No team stats/rankings API available yet
     ];
     this.maxBetsPerDay = parseInt(process.env.MAX_BETS_PER_DAY) || 5;
     this.maxDailyLoss = parseFloat(process.env.MAX_DAILY_LOSS) || 50;
+    this.maxBetsPerEvent = 2; // Limit to 2 bets per event to reduce variance
 
     // Bet history file
     this.betHistoryFile = path.join(__dirname, 'data', 'production_bets.json');
     this.ensureDataDirectory();
+
+    // Setup graceful shutdown handler
+    this.setupShutdownHandler();
   }
 
   ensureDataDirectory() {
     const dataDir = path.join(__dirname, 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
+    }
+  }
+
+  /**
+   * Setup graceful shutdown handler
+   */
+  setupShutdownHandler() {
+    const shutdown = async (signal) => {
+      console.log(`\n\n📴 Received ${signal} - Shutting down gracefully...`);
+      this.isRunning = false;
+
+      // Send end-of-session summary to Telegram
+      await this.sendSessionSummary();
+
+      console.log('✅ Shutdown complete\n');
+      process.exit(0);
+    };
+
+    process.on('SIGINT', () => shutdown('SIGINT'));
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+  }
+
+  /**
+   * Send session summary to Telegram
+   */
+  async sendSessionSummary() {
+    try {
+      const summary = {
+        startTime: this.sessionStart,
+        endTime: new Date(),
+        betsPlaced: this.betCount,
+        totalStaked: this.sessionBets.reduce((sum, bet) => sum + bet.stake, 0),
+        dailyProfit: this.dailyProfit,
+        betDetails: this.sessionBets,
+        currency: process.env.CLOUDBET_CURRENCY || 'USDT',
+      };
+
+      await telegramNotifier.sendSessionSummary(summary);
+
+      // Also log it
+      logger.info('Session summary sent to Telegram', {
+        betsPlaced: summary.betsPlaced,
+        dailyProfit: summary.dailyProfit,
+      });
+    } catch (error) {
+      logger.error('Error sending session summary', { error: error.message });
     }
   }
 
@@ -91,10 +145,50 @@ class ProductionBot {
   }
 
   /**
-   * Place a bet on Cloudbet
+   * Place a bet on Cloudbet (or send alert in alert-only mode)
    */
   async placeBet(opportunity, evaluation) {
     try {
+      const alertOnlyMode = process.env.ALERT_ONLY_MODE === 'true';
+
+      if (alertOnlyMode) {
+        logger.info('⚠️  ALERT ONLY MODE - Bet NOT placed, sending alert', {
+          event: `${opportunity.home} vs ${opportunity.away}`,
+          side: opportunity.side,
+          odds: opportunity.cloudbetOdds,
+          stake: evaluation.betSize,
+          edge: evaluation.edge.toFixed(2),
+        });
+
+        // Send Telegram alert with betting recommendation
+        await telegramNotifier.sendMessage(
+          `🚨 BETTING OPPORTUNITY ALERT\n\n` +
+          `${opportunity.sport.toUpperCase()}: ${opportunity.home} vs ${opportunity.away}\n\n` +
+          `📊 BET: ${opportunity.selection} @ ${opportunity.cloudbetOdds}\n` +
+          `💰 Recommended Stake: ${evaluation.betSize.toFixed(2)} USDT\n` +
+          `📈 Edge: ${evaluation.edge.toFixed(2)}%\n` +
+          `⚡ Efficiency: ${opportunity.efficiencyScore?.toFixed(1) || 'N/A'}\n` +
+          `📚 Sharp Books: ${opportunity.sharpBookCount || 0}\n\n` +
+          `⏰ Starts: ${new Date(opportunity.starts).toLocaleString()}\n\n` +
+          `🎯 Place this bet manually on your preferred bookmaker!`
+        );
+
+        // Track alert (not actual bet)
+        this.sessionBets.push({
+          home: opportunity.home,
+          away: opportunity.away,
+          sport: opportunity.sport,
+          side: opportunity.side,
+          odds: opportunity.cloudbetOdds,
+          stake: evaluation.betSize,
+          edge: evaluation.edge,
+          timestamp: new Date(),
+          alertOnly: true
+        });
+
+        return { alertSent: true };
+      }
+
       logger.info('Placing bet', {
         event: `${opportunity.home} vs ${opportunity.away}`,
         side: opportunity.side,
@@ -128,6 +222,30 @@ class ProductionBot {
 
       this.betCount++;
       this.lastBetTime = new Date();
+
+      // Track session bet for Telegram summary
+      this.sessionBets.push({
+        home: opportunity.home,
+        away: opportunity.away,
+        sport: opportunity.sport,
+        side: opportunity.side,
+        odds: opportunity.cloudbetOdds,
+        stake: evaluation.betSize,
+        edge: evaluation.edge,
+        timestamp: new Date(),
+      });
+
+      // Send Telegram notification for bet placed
+      await telegramNotifier.sendBetPlaced({
+        home: opportunity.home,
+        away: opportunity.away,
+        sport: opportunity.sport,
+        side: opportunity.side,
+        odds: opportunity.cloudbetOdds,
+        stake: evaluation.betSize,
+        edge: evaluation.edge,
+        currency: process.env.CLOUDBET_CURRENCY || 'USDT',
+      }).catch(err => logger.error('Failed to send Telegram notification', { error: err.message }));
 
       return result;
     } catch (error) {
@@ -169,6 +287,9 @@ class ProductionBot {
 
       const currentExposure = this.getCurrentExposure();
 
+      // Collect opportunities from all sports first
+      const allOpportunities = [];
+
       // Scan all sports
       for (const sport of this.sports) {
         logger.info(`Scanning ${sport} for opportunities`);
@@ -177,12 +298,26 @@ class ProductionBot {
         const opportunities = await multiBookmakerAggregator.findOpportunities(sport);
         logger.info(`Found ${opportunities.length} opportunities for ${sport}`);
 
-        if (opportunities.length === 0) {
-          continue;
+        if (opportunities.length > 0) {
+          allOpportunities.push(...opportunities);
         }
+      }
 
-        // Evaluate each opportunity
-        for (const opportunity of opportunities) {
+      // Sort all opportunities by start time (nearest first)
+      allOpportunities.sort((a, b) => {
+        const timeA = new Date(a.starts || a.cutoffTime);
+        const timeB = new Date(b.starts || b.cutoffTime);
+        return timeA - timeB;
+      });
+
+      logger.info('Processing opportunities in chronological order', {
+        totalOpportunities: allOpportunities.length,
+        firstEventTime: allOpportunities.length > 0 ? allOpportunities[0].starts : null,
+        firstEvent: allOpportunities.length > 0 ? `${allOpportunities[0].home} vs ${allOpportunities[0].away}` : null,
+      });
+
+      // Evaluate each opportunity in time order
+      for (const opportunity of allOpportunities) {
           // Check if we've hit daily limits
           if (this.betCount >= this.maxBetsPerDay) {
             logger.info('Daily bet limit reached', { limit: this.maxBetsPerDay });
@@ -192,6 +327,19 @@ class ProductionBot {
           if (Math.abs(this.dailyProfit) >= this.maxDailyLoss) {
             logger.info('Daily loss limit reached', { loss: Math.abs(this.dailyProfit), limit: this.maxDailyLoss });
             return;
+          }
+
+          // Check if we've already placed max bets on this event
+          const eventKey = `${opportunity.home}_vs_${opportunity.away}`;
+          const currentBetsOnEvent = this.eventBetCounts.get(eventKey) || 0;
+
+          if (currentBetsOnEvent >= this.maxBetsPerEvent) {
+            logger.debug('Max bets per event reached', {
+              event: eventKey,
+              current: currentBetsOnEvent,
+              max: this.maxBetsPerEvent
+            });
+            continue; // Skip this opportunity
           }
 
           // Evaluate with advanced strategy
@@ -214,12 +362,21 @@ class ProductionBot {
             const result = await this.placeBet(opportunity, evaluation);
 
             if (result) {
+              // Increment bet count for this event
+              const eventKey = `${opportunity.home}_vs_${opportunity.away}`;
+              this.eventBetCounts.set(eventKey, currentBetsOnEvent + 1);
+
+              logger.info('Updated event bet count', {
+                event: eventKey,
+                count: currentBetsOnEvent + 1,
+                max: this.maxBetsPerEvent
+              });
+
               // Wait a bit before next bet
               await new Promise(resolve => setTimeout(resolve, 2000));
             }
           }
         }
-      }
 
       logger.info('Scan complete', {
         betsPlaced: this.betCount,
