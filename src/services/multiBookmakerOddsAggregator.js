@@ -25,7 +25,8 @@ class MultiBookmakerOddsAggregator {
     this.sharpBookmakers = ['pinnacle', 'bookmaker', 'betcris', 'circa'];
 
     // Minimum bookmakers required for reliable edge detection
-    this.minBookmakers = parseInt(process.env.MIN_BOOKMAKERS) || 2;
+    // Use ?? instead of || to allow 0 as a valid value (for fundamental analysis mode)
+    this.minBookmakers = parseInt(process.env.MIN_BOOKMAKERS) ?? 2;
 
     // Cache for reducing API calls
     this.oddsCache = new Map();
