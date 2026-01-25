@@ -565,16 +565,23 @@ class AdvancedBettingStrategy {
     }
 
     // STEP 7: Calculate Expected Value
-    const expectedValue = edgeData.trueProbability * opportunity.cloudbetOdds * stake - stake;
+    // Use fundamental prediction confidence if edgeData is null
+    const trueProbability = edgeData?.trueProbability || opportunity.fundamentalPrediction?.confidence || 0.5;
+    const expectedValue = trueProbability * opportunity.cloudbetOdds * stake - stake;
+
+    // Calculate edge - use 0 if fundamental analysis mode without edge data
+    const edge = edgeData?.edge || 0;
+    const marketQuality = edgeData?.marketQuality || 'fundamental-analysis';
 
     logger.info('✅ BET APPROVED', {
-      edge: edgeData.edge.toFixed(2) + '%',
-      trueProbability: (edgeData.trueProbability * 100).toFixed(2) + '%',
+      edge: edge.toFixed(2) + '%',
+      trueProbability: (trueProbability * 100).toFixed(2) + '%',
       stake,
       expectedValue: expectedValue.toFixed(2),
-      marketQuality: edgeData.marketQuality,
+      marketQuality,
       efficiencyScore: efficiency.score,
       informationEdge: asymmetries.detected,
+      fundamentalAnalysis: !!opportunity.fundamentalPrediction,
     });
 
     logger.info('=== ADVANCED BET EVALUATION END ===');
@@ -582,10 +589,10 @@ class AdvancedBettingStrategy {
     return {
       ...opportunity,
       betSize: stake,
-      edge: edgeData.edge,
-      trueProbability: edgeData.trueProbability,
+      edge,
+      trueProbability,
       expectedValue,
-      marketQuality: edgeData.marketQuality,
+      marketQuality,
       efficiencyScore: efficiency.score,
       informationAsymmetry: asymmetries,
     };
