@@ -402,35 +402,90 @@ class FundamentalAnalysisPredictor {
    */
   matchTeamName(name1, name2) {
     if (!name1 || !name2) return false;
-    const n1 = name1.toLowerCase().trim();
-    const n2 = name2.toLowerCase().trim();
+    let n1 = name1.toLowerCase().trim();
+    let n2 = name2.toLowerCase().trim();
 
-    if (n1 === n2 || n1.includes(n2) || n2.includes(n1)) return true;
+    // Normalize: remove periods, replace hyphens with spaces, collapse whitespace, strip diacritics
+    n1 = n1.replace(/\./g, '').replace(/-/g, ' ').replace(/\s+/g, ' ')
+           .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    n2 = n2.replace(/\./g, '').replace(/-/g, ' ').replace(/\s+/g, ' ')
+           .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-    // Expand common abbreviations used by Cloudbet
+    // Normalize common city name spelling variants
+    n1 = n1.replace('munich', 'munchen');
+    n2 = n2.replace('munich', 'munchen');
+
+    if (n1 === n2) return true;
+
+    // Only use includes() if shorter string is >= 4 chars to avoid false positives
+    const minLen = Math.min(n1.length, n2.length);
+    if (minLen >= 4 && (n1.includes(n2) || n2.includes(n1))) return true;
+
+    // Comprehensive abbreviation map for all sports (Cloudbet → full city name)
     const abbreviations = {
-      'la ': 'los angeles ',
-      'sa ': 'san antonio ',
-      'gs ': 'golden state ',
-      'ny ': 'new york ',
-      'no ': 'new orleans ',
-      'okc ': 'oklahoma city ',
-      'tb ': 'tampa bay ',
-      'sj ': 'san jose ',
-      'nj ': 'new jersey ',
-      'kc ': 'kansas city ',
-      'gb ': 'green bay ',
-      'ne ': 'new england ',
+      // NBA
+      'la ': 'los angeles ', 'sa ': 'san antonio ', 'gs ': 'golden state ',
+      'ny ': 'new york ', 'no ': 'new orleans ', 'okc ': 'oklahoma city ',
+      'cle ': 'cleveland ', 'min ': 'minnesota ', 'den ': 'denver ',
+      'bos ': 'boston ', 'mil ': 'milwaukee ', 'phi ': 'philadelphia ',
+      'mia ': 'miami ', 'atl ': 'atlanta ', 'chi ': 'chicago ',
+      'bkn ': 'brooklyn ', 'tor ': 'toronto ', 'ind ': 'indiana ',
+      'cha ': 'charlotte ', 'was ': 'washington ', 'orl ': 'orlando ',
+      'det ': 'detroit ', 'sac ': 'sacramento ', 'phx ': 'phoenix ',
+      'hou ': 'houston ', 'mem ': 'memphis ', 'dal ': 'dallas ',
+      'por ': 'portland ',
+      // NFL (additional abbreviations not covered above)
+      'car ': 'carolina ', 'sf ': 'san francisco ',
+      'nyg ': 'new york ', 'nyj ': 'new york ',
+      'buf ': 'buffalo ', 'bal ': 'baltimore ', 'cin ': 'cincinnati ',
+      'pit ': 'pittsburgh ', 'jax ': 'jacksonville ', 'ten ': 'tennessee ',
+      'lv ': 'las vegas ', 'lac ': 'los angeles ',
+      'sea ': 'seattle ', 'ari ': 'arizona ',
+      // NHL
+      'tb ': 'tampa bay ', 'sj ': 'san jose ', 'nj ': 'new jersey ',
+      // Shared
+      'kc ': 'kansas city ', 'gb ': 'green bay ', 'ne ': 'new england ',
     };
 
     let expanded1 = n1;
     let expanded2 = n2;
     for (const [abbr, full] of Object.entries(abbreviations)) {
+      // Expand when abbreviation is at start of a multi-word name
       if (expanded1.startsWith(abbr)) expanded1 = full + expanded1.slice(abbr.length);
       if (expanded2.startsWith(abbr)) expanded2 = full + expanded2.slice(abbr.length);
+      // Also expand standalone codes (e.g., bare "orl" → "orlando")
+      const abbrTrimmed = abbr.trim();
+      const fullTrimmed = full.trim();
+      if (expanded1 === abbrTrimmed) expanded1 = fullTrimmed;
+      if (expanded2 === abbrTrimmed) expanded2 = fullTrimmed;
     }
 
-    return expanded1 === expanded2 || expanded1.includes(expanded2) || expanded2.includes(expanded1);
+    if (expanded1 === expanded2) return true;
+    const expandedMinLen = Math.min(expanded1.length, expanded2.length);
+    if (expandedMinLen >= 4 && (expanded1.includes(expanded2) || expanded2.includes(expanded1))) return true;
+
+    // Known team name aliases for edge cases (soccer, relocated teams, etc.)
+    const knownAliases = [
+      ['bayern munchen', 'fc bayern munchen'],
+      ['hoffenheim', 'tsg hoffenheim', 'tsg 1899 hoffenheim'],
+      ['paris saint germain', 'psg'],
+      ['atletico madrid', 'atletico de madrid'],
+      ['inter milan', 'internazionale', 'fc internazionale milano'],
+      ['lille osc', 'losc lille', 'losc'],
+      ['lyon', 'olympique lyonnais', 'olympique lyon'],
+      ['brest', 'stade brestois 29', 'stade brestois'],
+      ['as monaco', 'monaco fc'],
+      ['arizona coyotes', 'utah hockey club', 'utah mammoth'],
+      ['indiana colts', 'indianapolis colts'],
+    ];
+
+    for (const group of knownAliases) {
+      const match1 = group.some(alias => expanded1.includes(alias) || alias.includes(expanded1));
+      const match2 = group.some(alias => expanded2.includes(alias) || alias.includes(expanded2));
+      if (match1 && match2) return true;
+    }
+
+    return false;
   }
 
   /**
@@ -847,16 +902,26 @@ class FundamentalAnalysisPredictor {
   findNHLTeamInOfficialAPI(standings, teamName) {
     const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
 
-    // Common NHL abbreviations
+    // NHL abbreviations + relocated teams
     const abbrevMap = {
-      'la': 'losangeles',
-      'tb': 'tampabay',
-      'sj': 'sanjose',
-      'nj': 'newjersey'
+      'la': 'losangeles', 'tb': 'tampabay', 'sj': 'sanjose',
+      'nj': 'newjersey', 'ny': 'newyork', 'stl': 'stlouis',
+      'st': 'st'
+    };
+
+    // Handle relocated team names
+    const teamAliases = {
+      'arizonacoyotes': 'utahmammoth',
+      'utahhockeyclub': 'utahmammoth'
     };
 
     const parts = teamName.split(' ');
     let searchTerms = [normalized];
+
+    // Add alias if team was relocated
+    if (teamAliases[normalized]) {
+      searchTerms.push(teamAliases[normalized]);
+    }
 
     if (parts.length > 1) {
       const firstPart = parts[0].toLowerCase().replace(/[^a-z]/g, '');
@@ -871,10 +936,13 @@ class FundamentalAnalysisPredictor {
     for (const team of standings) {
       if (!team || !team.teamName) continue;
 
+      // Check both teamName and teamCommonName + placeName for better matching
       const apiName = team.teamName.default.toLowerCase().replace(/[^a-z]/g, '');
+      const placePlusCommon = ((team.placeName?.default || '') + ' ' + (team.teamCommonName?.default || '')).toLowerCase().replace(/[^a-z]/g, '');
 
       for (const term of searchTerms) {
-        if (apiName.includes(term) || term.includes(apiName)) {
+        if (apiName.includes(term) || term.includes(apiName) ||
+            placePlusCommon.includes(term) || term.includes(placePlusCommon)) {
           // NHL uses wins, losses, and OT losses
           // Total losses = regulation losses + OT losses
           const totalLosses = team.losses + team.otLosses;
@@ -987,15 +1055,19 @@ class FundamentalAnalysisPredictor {
   findNFLTeam(standings, teamName) {
     const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
 
-    // Common NFL abbreviations mapping
+    // All NFL abbreviations mapping
     const abbrevMap = {
-      'kc': 'kansascity',
-      'sf': 'sanfrancisco',
-      'la': 'losangeles',
-      'ne': 'newengland',
-      'no': 'neworleans',
-      'tb': 'tampabay',
-      'gb': 'greenbay'
+      'kc': 'kansascity', 'sf': 'sanfrancisco', 'la': 'losangeles',
+      'ne': 'newengland', 'no': 'neworleans', 'tb': 'tampabay',
+      'gb': 'greenbay', 'car': 'carolina', 'phi': 'philadelphia',
+      'dal': 'dallas', 'nyg': 'newyork', 'nyj': 'newyork',
+      'buf': 'buffalo', 'mia': 'miami', 'bal': 'baltimore',
+      'cin': 'cincinnati', 'cle': 'cleveland', 'pit': 'pittsburgh',
+      'hou': 'houston', 'ind': 'indianapolis', 'jax': 'jacksonville',
+      'ten': 'tennessee', 'den': 'denver', 'lv': 'lasvegas',
+      'lac': 'losangeles', 'sea': 'seattle', 'ari': 'arizona',
+      'chi': 'chicago', 'min': 'minnesota', 'det': 'detroit',
+      'atl': 'atlanta', 'was': 'washington'
     };
 
     // Extract city abbreviation if present (e.g., "KC" from "KC Chiefs")
@@ -1041,15 +1113,19 @@ class FundamentalAnalysisPredictor {
   findNFLTeamInESPN(teams, teamName) {
     const normalized = teamName.toLowerCase().replace(/[^a-z]/g, '');
 
-    // Common abbreviations
+    // All NFL abbreviations
     const abbrevMap = {
-      'kc': 'kansascity',
-      'sf': 'sanfrancisco',
-      'la': 'losangeles',
-      'ne': 'newengland',
-      'no': 'neworleans',
-      'tb': 'tampabay',
-      'gb': 'greenbay'
+      'kc': 'kansascity', 'sf': 'sanfrancisco', 'la': 'losangeles',
+      'ne': 'newengland', 'no': 'neworleans', 'tb': 'tampabay',
+      'gb': 'greenbay', 'car': 'carolina', 'phi': 'philadelphia',
+      'dal': 'dallas', 'nyg': 'newyork', 'nyj': 'newyork',
+      'buf': 'buffalo', 'mia': 'miami', 'bal': 'baltimore',
+      'cin': 'cincinnati', 'cle': 'cleveland', 'pit': 'pittsburgh',
+      'hou': 'houston', 'ind': 'indianapolis', 'jax': 'jacksonville',
+      'ten': 'tennessee', 'den': 'denver', 'lv': 'lasvegas',
+      'lac': 'losangeles', 'sea': 'seattle', 'ari': 'arizona',
+      'chi': 'chicago', 'min': 'minnesota', 'det': 'detroit',
+      'atl': 'atlanta', 'was': 'washington'
     };
 
     const parts = teamName.split(' ');
