@@ -466,9 +466,27 @@ class AdvancedBettingStrategy {
           return null;
         }
 
+        // SAFEGUARD: Reject bets where our prediction contradicts the market by a large margin
+        // If market odds imply <30% chance but we predict >50%, something is wrong with our data
+        const impliedProbability = 1 / opportunity.cloudbetOdds;
+        const predictionGap = prediction.confidence - impliedProbability;
+
+        if (predictionGap > 0.25) {
+          logger.warn('❌ Prediction contradicts market odds by large margin - likely bad data', {
+            predicted: prediction.predictedTeam,
+            ourConfidence: (prediction.confidence * 100).toFixed(1) + '%',
+            marketImplied: (impliedProbability * 100).toFixed(1) + '%',
+            gap: (predictionGap * 100).toFixed(1) + '%',
+            odds: opportunity.cloudbetOdds,
+            factors: prediction.factors.map(f => f.factor).join(', ')
+          });
+          return null;
+        }
+
         logger.info('✅ Fundamental analysis supports this bet', {
           predicted: prediction.predictedTeam,
           confidence: (prediction.confidence * 100).toFixed(1) + '%',
+          marketImplied: (impliedProbability * 100).toFixed(1) + '%',
           reasoning: prediction.reasoning
         });
 

@@ -205,8 +205,11 @@ class FundamentalAnalysisPredictor {
    * Get NBA standings from API-Sports (Primary source)
    */
   async getNBAStandingsFromAPISports(homeTeamName, awayTeamName) {
-    const currentSeason = new Date().getFullYear();
-    const cacheKey = `apisports_standings_${currentSeason}`;
+    const currentYear = new Date().getFullYear();
+    // API-Sports free plan only supports seasons 2022-2024
+    // NBA season spans two years (e.g., 2024-25), use start year
+    const season = Math.min(currentYear - 1, 2024);
+    const cacheKey = `apisports_standings_${season}`;
 
     // Check cache
     if (this.nbaStandingsCache.has(cacheKey)) {
@@ -218,10 +221,11 @@ class FundamentalAnalysisPredictor {
     }
 
     // Fetch from API-Sports
+    logger.info('Fetching NBA standings from API-Sports', { season });
     const response = await axios.get(`${this.nbaURL}/standings`, {
       params: {
         league: 'standard',
-        season: currentSeason - 1 // API-Sports uses season start year (2024 for 2024-25 season)
+        season: season
       },
       headers: {
         'x-apisports-key': this.apiKey
@@ -257,9 +261,9 @@ class FundamentalAnalysisPredictor {
       }
     }
 
-    // Fetch from ESPN
+    // Fetch from ESPN (v2 API - the site/v2 endpoint no longer returns standings data)
     const response = await axios.get(
-      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/standings',
+      'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
       { timeout: 10000 }
     );
 
@@ -301,16 +305,25 @@ class FundamentalAnalysisPredictor {
       return null;
     }
 
+    // API-Sports sometimes has win.total=0 but win.home/win.away populated
+    const homeWins = homeTeam.win.total || (homeTeam.win.home + homeTeam.win.away);
+    const homeLosses = homeTeam.loss.total || (homeTeam.loss.home + homeTeam.loss.away);
+    const awayWins = awayTeam.win.total || (awayTeam.win.home + awayTeam.win.away);
+    const awayLosses = awayTeam.loss.total || (awayTeam.loss.home + awayTeam.loss.away);
+
+    const homeTotal = homeWins + homeLosses;
+    const awayTotal = awayWins + awayLosses;
+
     return {
       home: {
-        wins: homeTeam.win.total || homeTeam.win.home + homeTeam.win.away,
-        losses: homeTeam.loss.total || homeTeam.loss.home + homeTeam.loss.away,
-        winPct: homeTeam.win.total / (homeTeam.win.total + homeTeam.loss.total) || 0.5
+        wins: homeWins,
+        losses: homeLosses,
+        winPct: homeTotal > 0 ? homeWins / homeTotal : 0.5
       },
       away: {
-        wins: awayTeam.win.total || awayTeam.win.home + awayTeam.win.away,
-        losses: awayTeam.loss.total || awayTeam.loss.home + awayTeam.loss.away,
-        winPct: awayTeam.win.total / (awayTeam.win.total + awayTeam.loss.total) || 0.5
+        wins: awayWins,
+        losses: awayLosses,
+        winPct: awayTotal > 0 ? awayWins / awayTotal : 0.5
       },
       homeRank: homeTeam.conference.rank || 15,
       awayRank: awayTeam.conference.rank || 15,
@@ -391,7 +404,33 @@ class FundamentalAnalysisPredictor {
     if (!name1 || !name2) return false;
     const n1 = name1.toLowerCase().trim();
     const n2 = name2.toLowerCase().trim();
-    return n1 === n2 || n1.includes(n2) || n2.includes(n1);
+
+    if (n1 === n2 || n1.includes(n2) || n2.includes(n1)) return true;
+
+    // Expand common abbreviations used by Cloudbet
+    const abbreviations = {
+      'la ': 'los angeles ',
+      'sa ': 'san antonio ',
+      'gs ': 'golden state ',
+      'ny ': 'new york ',
+      'no ': 'new orleans ',
+      'okc ': 'oklahoma city ',
+      'tb ': 'tampa bay ',
+      'sj ': 'san jose ',
+      'nj ': 'new jersey ',
+      'kc ': 'kansas city ',
+      'gb ': 'green bay ',
+      'ne ': 'new england ',
+    };
+
+    let expanded1 = n1;
+    let expanded2 = n2;
+    for (const [abbr, full] of Object.entries(abbreviations)) {
+      if (expanded1.startsWith(abbr)) expanded1 = full + expanded1.slice(abbr.length);
+      if (expanded2.startsWith(abbr)) expanded2 = full + expanded2.slice(abbr.length);
+    }
+
+    return expanded1 === expanded2 || expanded1.includes(expanded2) || expanded2.includes(expanded1);
   }
 
   /**
@@ -632,6 +671,19 @@ class FundamentalAnalysisPredictor {
       factor: 'Home Court',
       impact: homeCourtBonus
     });
+
+    // SAFEGUARD: Reject predictions based ONLY on home court advantage
+    // If no other factor was detected, it means we couldn't get real team data
+    const realFactors = factors.filter(f => f.factor !== 'Home Court');
+    if (realFactors.length === 0) {
+      logger.warn('❌ Rejecting prediction: only home court advantage detected, no actual team data', {
+        home: homeTeam.name,
+        away: awayTeam.name,
+        sport,
+        factors
+      });
+      return null;
+    }
 
     // Normalize to percentages
     const total = homeScore + awayScore;
@@ -1578,6 +1630,16 @@ class FundamentalAnalysisPredictor {
         awayScore += impact;
         factors.push({ factor: 'Strong Away Record', impact });
       }
+    }
+
+    // SAFEGUARD: Reject predictions based ONLY on home advantage
+    const realFactors = factors.filter(f => f.factor !== 'Home Advantage');
+    if (realFactors.length === 0) {
+      logger.warn('❌ Rejecting soccer prediction: only home advantage detected, no actual team data', {
+        home: homeTeam.name,
+        away: awayTeam.name
+      });
+      return null;
     }
 
     // Calculate final probabilities
